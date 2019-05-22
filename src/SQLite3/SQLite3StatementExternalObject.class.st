@@ -10,7 +10,7 @@ Class {
 
 { #category : #'instance finalization' }
 SQLite3StatementExternalObject class >> finalizeResourceData: aHandle [
-	UDBCSQLite3Library current 
+	SQLite3Library current 
 		ffiCall: #(int sqlite3_finalize (ExternalAddress aHandle))
 ]
 
