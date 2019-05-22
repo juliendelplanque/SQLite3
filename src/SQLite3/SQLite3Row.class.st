@@ -75,7 +75,7 @@ SQLite3Row >> dataCount: anObject [
 
 { #category : #'reflective operations' }
 SQLite3Row >> doesNotUnderstand: aMessage [
-
+	self flag: #TODO."Need to review this code, should we keep it?..."
 	^ self at: aMessage selector asString 
 			ifAbsent: [ 
 				"20160514: This bit, for Glorp integration, feels a bit iffy."
