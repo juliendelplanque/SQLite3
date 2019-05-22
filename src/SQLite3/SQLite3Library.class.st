@@ -592,6 +592,16 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 
 ]
 
+{ #category : #'accessing platform' }
+SQLite3Library >> unix32ModuleName [
+	^ 'libsqlite3.so'
+]
+
+{ #category : #'accessing platform' }
+SQLite3Library >> unix64ModuleName [
+	^ 'libsqlite3.so'
+]
+
 { #category : #'private - conversion' }
 SQLite3Library >> utf8StringToPharo: anUTF8String [
 	"Converts from SQLite UTF-8 to Pharo Multibyte Characters"
