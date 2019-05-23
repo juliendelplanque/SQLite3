@@ -52,7 +52,7 @@ SQLite3PreparedStatement >> at: aColumn putInteger: anInteger [
 { #category : #'public - accessing' }
 SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 	"Goofy interface note - anObject is ignored here."
-	"When used by UDBCSQLite3Connection, anObject will always be nil."
+	"When used by SQLite3Connection, anObject will always be nil."
 	^ self library with: handle putNullAt: aColumn
 ]
 
