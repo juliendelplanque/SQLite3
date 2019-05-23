@@ -240,6 +240,7 @@ SQLite3PreparedStatement >> step [
 { #category : #private }
 SQLite3PreparedStatement >> stepOk: aValue [
 
+	self flag: #TODO. "ROW AND DONE should not be propagated to the caller. Object should be returned to model those instead."
 	"These are normal conditions."	
 	(aValue = ROW) ifTrue: [ ^ ROW ].
 	(aValue = DONE) ifTrue: [ ^ DONE ].
