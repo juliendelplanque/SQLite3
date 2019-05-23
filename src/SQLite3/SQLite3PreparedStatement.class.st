@@ -39,13 +39,8 @@ SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
-	| f |
-	
-	f := (aFloat isKindOf: Fraction)
-		ifTrue: [ aFloat asFloat ]
-		ifFalse: [ aFloat ].
-	^ self library with: handle at: aColumn putFloat: f
+SQLite3PreparedStatement >> at: aColumn putFloat: anNumber [
+	^ self library with: handle at: aColumn putFloat: anNumber asFloat
 ]
 
 { #category : #'public - accessing' }
