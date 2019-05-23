@@ -16,3 +16,6 @@ addons:
   homebrew:
     packages:
       - sqlite3
+  apt:
+    packages:
+      - sqlite3
