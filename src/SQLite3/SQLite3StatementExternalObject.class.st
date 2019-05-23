@@ -11,5 +11,5 @@ Class {
 { #category : #'instance finalization' }
 SQLite3StatementExternalObject class >> finalizeResourceData: aHandle [
 	SQLite3Library uniqueInstance 
-		apiFinalize: aHandle
+		ffiCall: #(int sqlite3_finalize (ExternalAddress aHandle))
 ]

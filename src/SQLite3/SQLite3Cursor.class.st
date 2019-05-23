@@ -3,7 +3,7 @@ I represent a set of results returned by the database. I produce UDBCSQLite3Row 
 
 "
 Class {
-	#name : #SQLite3ResultSet,
+	#name : #SQLite3Cursor,
 	#superclass : #Object,
 	#instVars : [
 		'db',
@@ -18,14 +18,14 @@ Class {
 }
 
 { #category : #API }
-SQLite3ResultSet >> close [
+SQLite3Cursor >> close [
 
 	statement ifNotNil: [ statement finalize ].
 	statement := nil
 ]
 
 { #category : #private }
-SQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
+SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
 	| obj |
 
 	db := aDb.
@@ -44,7 +44,7 @@ SQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
 ]
 
 { #category : #private }
-SQLite3ResultSet >> execute: anSQLText withCollection: aCollection [
+SQLite3Cursor >> execute: anSQLText withCollection: aCollection [
 	| i |
 	self prepareStatement: anSQLText.
 	i := 1.
@@ -53,7 +53,7 @@ SQLite3ResultSet >> execute: anSQLText withCollection: aCollection [
 ]
 
 { #category : #private }
-SQLite3ResultSet >> execute: aStatement withIndex: anInteger withValue: anObject [
+SQLite3Cursor >> execute: aStatement withIndex: anInteger withValue: anObject [
 		
 	aStatement perform: (aStatement dataTypeForObject: anObject) with: anInteger with: anObject.
 	^ anInteger + 1
@@ -62,7 +62,7 @@ SQLite3ResultSet >> execute: aStatement withIndex: anInteger withValue: anObject
 ]
 
 { #category : #private }
-SQLite3ResultSet >> execute: aStatement withKey: keyObject withValue: valueObject [
+SQLite3Cursor >> execute: aStatement withKey: keyObject withValue: valueObject [
 	| col |
 
 	col := aStatement bindParameterIndex: keyObject.
@@ -74,7 +74,7 @@ SQLite3ResultSet >> execute: aStatement withKey: keyObject withValue: valueObjec
 ]
 
 { #category : #private }
-SQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
+SQLite3Cursor >> execute: anSQLText withKeysAndValues: anObject [
 	
 	self prepareStatement: anSQLText.
 	anObject keysAndValuesDo: [ :k :v | 
@@ -84,7 +84,7 @@ SQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
 ]
 
 { #category : #initialization }
-SQLite3ResultSet >> initialize [
+SQLite3Cursor >> initialize [
 	"Initializes the receiver"
 	
 	super initialize.
@@ -94,13 +94,13 @@ SQLite3ResultSet >> initialize [
 ]
 
 { #category : #API }
-SQLite3ResultSet >> next [
+SQLite3Cursor >> next [
 	^ self nextOfClass: self rowClass
 
 ]
 
 { #category : #API }
-SQLite3ResultSet >> nextOfClass: aRowClass [
+SQLite3Cursor >> nextOfClass: aRowClass [
 	| numberOfColumns resultRow resultValue |
 	statement
 		ifNil: [ SQLite3Misuse
@@ -121,7 +121,7 @@ SQLite3ResultSet >> nextOfClass: aRowClass [
 ]
 
 { #category : #API }
-SQLite3ResultSet >> onlyRow [
+SQLite3Cursor >> onlyRow [
 	^ self onlyRow: [ ]
 
 "For the common case where there is exactly one row expected. Returns nil if there is no row."
@@ -129,7 +129,7 @@ SQLite3ResultSet >> onlyRow [
 ]
 
 { #category : #API }
-SQLite3ResultSet >> onlyRow: ifNoneBlock [
+SQLite3Cursor >> onlyRow: ifNoneBlock [
 	| rows |
 	
 	rows := self rows.
@@ -142,7 +142,7 @@ SQLite3ResultSet >> onlyRow: ifNoneBlock [
 ]
 
 { #category : #private }
-SQLite3ResultSet >> prepareStatement: anSQLText [
+SQLite3Cursor >> prepareStatement: anSQLText [
 
 	statement := db prepare: anSQLText.
 	statement clearBindings.
@@ -151,23 +151,23 @@ SQLite3ResultSet >> prepareStatement: anSQLText [
 ]
 
 { #category : #accessing }
-SQLite3ResultSet >> rowClass [
+SQLite3Cursor >> rowClass [
 	^ rowClass
 ]
 
 { #category : #accessing }
-SQLite3ResultSet >> rowClass: anObject [
+SQLite3Cursor >> rowClass: anObject [
 	rowClass := anObject
 ]
 
 { #category : #API }
-SQLite3ResultSet >> rows [
+SQLite3Cursor >> rows [
 	^ self rowsOfClass: self rowClass
 
 ]
 
 { #category : #API }
-SQLite3ResultSet >> rowsOfClass: aRowClass [
+SQLite3Cursor >> rowsOfClass: aRowClass [
 	| rows nc rr rv |
 	statement
 		ifNil: [ SQLite3Misuse
@@ -186,11 +186,11 @@ SQLite3ResultSet >> rowsOfClass: aRowClass [
 ]
 
 { #category : #accessing }
-SQLite3ResultSet >> statement [
+SQLite3Cursor >> statement [
 	^ statement
 ]
 
 { #category : #accessing }
-SQLite3ResultSet >> statement: anObject [
+SQLite3Cursor >> statement: anObject [
 	statement := anObject
 ]
