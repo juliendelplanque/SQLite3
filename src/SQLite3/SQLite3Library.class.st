@@ -599,10 +599,11 @@ SQLite3Library >> unix32ModuleName [
 	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
+			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
 			| libraryPath |
-			libraryPath := path asFileReference / 'libsqlite3.so'.
+			libraryPath := path asFileReference / libraryName.
 			libraryPath exists
-				ifTrue: [ ^ libraryPath fullName ] ].
+				ifTrue: [ ^ libraryPath fullName ] ] ].
 	self error: 'Cannot locate sqlite3 library. Please check if it installed on your system'
 ]
 
