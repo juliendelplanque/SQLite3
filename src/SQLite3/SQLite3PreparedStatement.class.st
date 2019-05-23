@@ -76,10 +76,10 @@ SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
 	self flag: #TODO. "Once the step will not return an integer anymore, it will be possible to delegate on the object."
 	ret := self step. 
-	(ret = 101) " == SQLITE_DONE, meaning step should not be sent again."
+	(ret = DONE)
 		ifTrue: [ aBlock value: self ]
 		ifFalse: [
-			[ ret = 100 ] whileTrue: [ " == SQLITE_ROW, meaning another row is available."
+			[ ret = ROW ] whileTrue: [
 				aBlock value: self.
 				ret := self step ]]
 ]
