@@ -346,7 +346,7 @@ SQLite3Library >> blobFrom: aStatement at: aColumn [
 { #category : #accessing }
 SQLite3Library >> booleanFrom: aStatement at: aColumn [
 	| declared selector value |
-	
+	self flag: #TODO. "Needs to be reviewed."
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
 	(self class booleanTypes includes: declared asLowercase) ifFalse: [ 
 		SQLite3Error signal: 'Column is not declared as a boolean.' ].
