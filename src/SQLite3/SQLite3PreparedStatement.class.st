@@ -209,11 +209,6 @@ SQLite3PreparedStatement >> nilAt: aColumn [
 	^ nil  
 ]
 
-{ #category : #'public - accessing' }
-SQLite3PreparedStatement >> objectAt: aColumn [
-	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
-]
-
 { #category : #public }
 SQLite3PreparedStatement >> reset [
 	connection reset: self
