@@ -490,7 +490,11 @@ SQLite3Library >> loadExtension: dbHandle with: aFilename [
 
 { #category : #'accessing platform' }
 SQLite3Library >> macModuleName [ 
-	^ 'libsqlite3.dylib'
+	| libName |
+	libName := 'libsqlite3.dylib'.
+	#('/usr/local/lib/' '/usr/lib/') do: [ :directoryPath |
+		(directoryPath asFileReference /libName ) exists
+			ifTrue: [ (directoryPath asFileReference / libName) pathString  ] ]
 ]
 
 { #category : #accessing }
