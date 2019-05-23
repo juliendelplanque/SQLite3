@@ -44,3 +44,17 @@ SQLite3Row >> atName: aKey put: anObject [
 						-> '`@receiver atColumnNamed: `@statements1 put: `@statements2'.
 	^ self atColumnNamed: aKey put: anObject
 ]
+
+{ #category : #'*SQLite3-Deprecated' }
+SQLite3Row >> dataCount [
+	self
+		deprecated: 'Please use #size instead'
+		transformWith: '`@receiver dataCount' 
+						-> '`@receiver size'.
+	^ self size
+]
+
+{ #category : #'*SQLite3-Deprecated' }
+SQLite3Row >> dataCount: anObject [
+	self error: 'Should not set size by hand.'
+]

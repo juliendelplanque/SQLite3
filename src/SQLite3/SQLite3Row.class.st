@@ -6,8 +6,7 @@ Class {
 	#name : #SQLite3Row,
 	#superclass : #Object,
 	#instVars : [
-		'data',
-		'dataCount'
+		'data'
 	],
 	#category : #'SQLite3-Database'
 }
@@ -46,16 +45,6 @@ SQLite3Row >> atIndex: anIndex put: anObject [
 SQLite3Row >> data [
 
 	 ^data
-]
-
-{ #category : #accessing }
-SQLite3Row >> dataCount [
-	^ self data size
-]
-
-{ #category : #accessing }
-SQLite3Row >> dataCount: anObject [
-	self error: 'Should not set size by hand.'
 ]
 
 { #category : #accessing }
