@@ -11,6 +11,9 @@ Class {
 		'moreRows',
 		'rowClass'
 	],
+	#pools : [
+		'SQLite3Constants'
+	],
 	#category : #'SQLite3-Database'
 }
 
@@ -98,24 +101,23 @@ SQLite3ResultSet >> next [
 
 { #category : #API }
 SQLite3ResultSet >> nextOfClass: aRowClass [
-	| nc rr rv |
+	| numberOfColumns resultRow resultValue |
 
 	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	moreRows ifTrue: [	
-		nc := statement dataValuesAvailable.
-		(nc = 0)
+		numberOfColumns := statement dataValuesAvailable.
+		(numberOfColumns = 0)
 			ifTrue: [ ^ nil ] 
 			ifFalse: [ 
-				rr := aRowClass new.
-				0 to: nc - 1 do: [ :c | 
-					rv := statement valueOfColumn: c.
-					rr atIndex: c + 1 put: rv.
-					rr atName: (statement nameOfColumn: c) put: rv ]. 
-				rr dataCount: nc. 
-				"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
-				moreRows := (statement step) = 100. " == SQLITE_ROW "
-				^ rr ]].
+				resultRow := aRowClass new.
+				0 to: numberOfColumns - 1 do: [ :columnIndex | 
+					resultValue := statement valueOfColumn: columnIndex.
+					resultRow atIndex: columnIndex + 1 put: resultValue.
+					resultRow atName: (statement nameOfColumn: columnIndex) put: resultValue ]. 
+				resultRow dataCount: numberOfColumns. 
+				moreRows := (statement step) = ROW.
+				^ resultRow ]].
 		
 	^ nil
 
