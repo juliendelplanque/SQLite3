@@ -19,3 +19,6 @@ addons:
   apt:
     packages:
       - sqlite3
+
+before_install:
+  - export PATH=$PATH:/usr/local/lib
