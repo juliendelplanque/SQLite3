@@ -19,3 +19,4 @@ addons:
   apt:
     packages:
       - sqlite3
+      - libsqlite3-0:i386
