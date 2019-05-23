@@ -11,9 +11,9 @@ Class {
 	#category : #'SQLite3-Database'
 }
 
-{ #category : #accessing }
+{ #category : #converting }
 SQLite3Row >> asArray [
-	^ self data values asArray
+	^ self values asArray
 ]
 
 { #category : #accessing }
@@ -37,8 +37,8 @@ SQLite3Row >> atIndex: anIndex [
 ]
 
 { #category : #accessing }
-SQLite3Row >> atIndex: anIndex put: anObject [
-	^ self data at: (self data keyAtIndex: anIndex) put: anObject
+SQLite3Row >> columnNames [
+	^ self data keys
 ]
 
 { #category : #accessing }
@@ -70,4 +70,9 @@ SQLite3Row >> last [
 { #category : #accessing }
 SQLite3Row >> size [
 	^ self data size
+]
+
+{ #category : #accessing }
+SQLite3Row >> values [
+	^ self data values
 ]
