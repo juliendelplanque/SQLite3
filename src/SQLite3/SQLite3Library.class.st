@@ -497,7 +497,7 @@ SQLite3Library >> macModuleName [
 		(directoryPath asFileReference /libName ) exists
 			ifTrue: [ ^ (directoryPath asFileReference / libName) pathString  ] ].
 		
-	self error: 'Not able to locate the sqlite3 shared library.'
+	self error: 'Cannot locate sqlite3 library. Please check if it installed on your system'
 ]
 
 { #category : #accessing }
@@ -601,12 +601,26 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 
 { #category : #'accessing platform' }
 SQLite3Library >> unix32ModuleName [
-	^ 'libsqlite3.so'
+	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
+			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
+		do: [ :path | 
+			| libraryPath |
+			libraryPath := path asFileReference / 'libsqlite3.so'.
+			libraryPath exists
+				ifTrue: [ ^ libraryPath fullName ] ].
+	self error: 'Cannot locate sqlite3 library. Please check if it installed on your system'
 ]
 
 { #category : #'accessing platform' }
 SQLite3Library >> unix64ModuleName [
-	^ 'libsqlite3.so'
+	(#('/lib/x86_64-linux-gnu' '/usr/lib'),
+			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
+		do: [ :path | 
+			| libraryPath |
+			libraryPath := path asFileReference /  'libsqlite3.so'.
+			libraryPath exists
+				ifTrue: [ ^ libraryPath fullName ] ].
+	self error: 'Cannot locate sqlite3 library. Please check if it installed on your system'
 ]
 
 { #category : #'private - conversion' }
