@@ -164,13 +164,12 @@ SQLite3BaseConnection >> finalize: anSQLText [
 
 { #category : #initialization }
 SQLite3BaseConnection >> initialize [
-	
 	super initialize.
 	isOpen := false.
-	library := SQLite3Library current.
+	library := SQLite3Library uniqueInstance.
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
-	statementClass := SQLite3PreparedStatement.
+	statementClass := SQLite3PreparedStatement
 ]
 
 { #category : #testing }

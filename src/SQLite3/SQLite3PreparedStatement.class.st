@@ -204,7 +204,7 @@ SQLite3PreparedStatement >> isFloatLike: anObject [
 
 { #category : #private }
 SQLite3PreparedStatement >> library [
-	^SQLite3Library current
+	^ SQLite3Library uniqueInstance
 ]
 
 { #category : #'public - accessing' }
