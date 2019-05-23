@@ -107,6 +107,7 @@ SQLite3PreparedStatement >> connection: anObject [
 
 { #category : #'public - accessing' }
 SQLite3PreparedStatement >> dataTypeForObject: anObject [
+	self flag: #TODO. "Delgate on objects through extension methods."
 
 	anObject ifNil: [ ^#at:putNil: ].
 
@@ -204,6 +205,7 @@ SQLite3PreparedStatement >> nameOfColumn: aColumn [
 
 { #category : #'public - accessing' }
 SQLite3PreparedStatement >> nilAt: aColumn [
+	self flag: #TODO. "Strange ? What is column does not exists?"
 	^ nil  
 ]
 
