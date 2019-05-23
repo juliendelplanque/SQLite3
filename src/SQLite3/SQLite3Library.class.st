@@ -33,7 +33,7 @@ SQLite3Library class >> booleanTypes [
 { #category : #factory }
 SQLite3Library class >> current [
 	self flag: #TODO. "Use #uniqueInstance provided by UFFILibrary."
-	^Current ifNil: [ Current := self new ]
+	^Current ifNil: [ Current := self uniqueInstance ]
 ]
 
 { #category : #'private - accessing' }
@@ -81,6 +81,7 @@ SQLite3Library class >> initializeTypeMap [
 
 { #category : #factory }
 SQLite3Library class >> reset [
+	<script>
 	Current := nil
 ]
 
@@ -494,7 +495,9 @@ SQLite3Library >> macModuleName [
 	libName := 'libsqlite3.dylib'.
 	#('/usr/local/lib/' '/usr/lib/') do: [ :directoryPath |
 		(directoryPath asFileReference /libName ) exists
-			ifTrue: [ (directoryPath asFileReference / libName) pathString  ] ]
+			ifTrue: [ ^ (directoryPath asFileReference / libName) pathString  ] ].
+		
+	self error: 'Not able to locate the sqlite3 shared library.'
 ]
 
 { #category : #accessing }
