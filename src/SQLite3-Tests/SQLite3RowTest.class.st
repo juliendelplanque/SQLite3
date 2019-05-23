@@ -30,6 +30,46 @@ SQLite3RowTest >> testAsArray [
 ]
 
 { #category : #test }
+SQLite3RowTest >> testAtColumnNamed [
+	self should: [ emptyRow atColumnNamed: 'foo' ] raise: KeyNotFound.
+
+	self assert: (row atColumnNamed: 'foo') equals: 1.
+	self assert: (row atColumnNamed: 'bar') equals: true.
+	self assert: (row atColumnNamed: 'pi') equals: '3.14'.
+	
+	self should: [ row atColumnNamed: 'nope' ] raise: KeyNotFound.
+]
+
+{ #category : #test }
+SQLite3RowTest >> testAtColumnNamedIfAbsent [
+	|blockExecutedFlag|
+	blockExecutedFlag := false.
+	
+	row atColumnNamed: 'foo' ifAbsent: [ blockExecutedFlag := true ].
+	
+	self deny: blockExecutedFlag.
+	
+	row atColumnNamed: 'nope' ifAbsent: [ blockExecutedFlag := true ].
+	
+	self assert: blockExecutedFlag.
+]
+
+{ #category : #test }
+SQLite3RowTest >> testAtColumnNamedPut [
+	self should: [ emptyRow atColumnNamed: 'foo' ] raise: KeyNotFound.
+	
+	emptyRow atColumnNamed: 'foo' put: 42.
+	
+	self assert: (emptyRow atColumnNamed: 'foo') equals: 42.
+
+	self assert: (row atColumnNamed: 'foo') equals: 1.
+	
+	row atColumnNamed: 'foo' put: 2.
+	
+	self assert: (row atColumnNamed: 'foo') equals: 2
+]
+
+{ #category : #test }
 SQLite3RowTest >> testAtIndex [
 	self should: [ emptyRow atIndex: 1 ] raise: SubscriptOutOfBounds.
 
