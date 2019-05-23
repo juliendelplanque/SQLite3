@@ -32,7 +32,7 @@ SQLite3Library class >> booleanTypes [
 
 { #category : #factory }
 SQLite3Library class >> current [
-
+	self flag: #TODO. "Use #uniqueInstance provided by UFFILibrary."
 	^Current ifNil: [ Current := self new ]
 ]
 

@@ -74,7 +74,7 @@ SQLite3PreparedStatement >> at: aColumn putString: aString [
 { #category : #public }
 SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
-	
+	self flag: #TODO. "Once the step will not return an integer anymore, it will be possible to delegate on the object."
 	ret := self step. 
 	(ret = 101) " == SQLITE_DONE, meaning step should not be sent again."
 		ifTrue: [ aBlock value: self ]
