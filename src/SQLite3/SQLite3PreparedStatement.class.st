@@ -57,11 +57,6 @@ SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> at: aColumn putObject: anObject [
-	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
-]
-
-{ #category : #'public - accessing' }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
