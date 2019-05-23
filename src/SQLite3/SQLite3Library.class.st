@@ -5,7 +5,6 @@ Class {
 	#name : #SQLite3Library,
 	#superclass : #FFILibrary,
 	#classVars : [
-		'Current',
 		'DataTypeMap',
 		'TypeMap'
 	],
@@ -28,12 +27,6 @@ SQLite3Library class >> booleanSQLTrueWords [
 { #category : #'private - accessing' }
 SQLite3Library class >> booleanTypes [
 	^ #('boolean' 'bool')
-]
-
-{ #category : #factory }
-SQLite3Library class >> current [
-	self flag: #TODO. "Use #uniqueInstance provided by UFFILibrary."
-	^Current ifNil: [ Current := self uniqueInstance ]
 ]
 
 { #category : #'private - accessing' }
@@ -77,12 +70,6 @@ SQLite3Library class >> initializeTypeMap [
 		sqlite3_blob			NBSQLite3BlobExternalObject "
 		sqlite3_int64		FFIInt64
 	)
-]
-
-{ #category : #factory }
-SQLite3Library class >> reset [
-	<script>
-	Current := nil
 ]
 
 { #category : #'private - api' }
