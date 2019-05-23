@@ -251,10 +251,10 @@ SQLite3Library >> apiExec: dbHandle withSQLText: anSQLText with: callback with: 
 ]
 
 { #category : #'private - api' }
-SQLite3Library >> apiFinalize: handle [
+SQLite3Library >> apiFinalize: aHandle [
 	"int sqlite3_finalize(sqlite3_stmt*)"
 	 
-	^self ffiCall: #(int sqlite3_finalize(sqlite3_stmt *handle))
+	^self ffiCall: #(int sqlite3_finalize(ExternalAddress aHandle))
 	 
 ]
 
