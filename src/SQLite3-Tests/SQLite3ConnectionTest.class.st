@@ -9,7 +9,7 @@ Class {
 		'res',
 		'rs'
 	],
-	#category : #'SQLite3-Tests'
+	#category : #'SQLite3-Tests-Connections'
 }
 
 { #category : #utilities }
@@ -54,16 +54,13 @@ SQLite3ConnectionTest >> tearDown [
 { #category : #tests }
 SQLite3ConnectionTest >> testExactlyOneRow [
 	| row |
-	
 	self populateRowsInto: 'junk' of: db.
-	row := (db execute: 'select * from junk where rt = ''1-ZZZ''') onlyRow.
-	
-	self assert: (row at: 'rk') equals: 1.
-	self assert: (row at: 'rt') equals: '1-ZZZ'.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 3) equals: '1-ZZZ'.
-	
-
+	row := (db execute: 'select * from junk where rt = ''1-ZZZ''')
+		onlyRow.
+	self assert: (row atColumnNamed: 'rk') equals: 1.
+	self assert: (row atColumnNamed: 'rt') equals: '1-ZZZ'.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 3) equals: '1-ZZZ'
 ]
 
 { #category : #tests }
@@ -122,94 +119,81 @@ SQLite3ConnectionTest >> testExecuteNoResult [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertArray [
 	| rd |
-		
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' value: 1 value: 'two'.
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		value: 1
+		value: 'two'.
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-	
 	rd := (db execute: 'select * from x') rows first.
-	self assert: (rd at: 'xk') equals: 1.
-	self assert: (rd at: 'iv') equals: 1.
-	self assert: (rd at: 'tv') equals: 'two'.
-	self assert: (rd at: 1) equals: 1.
-	self assert: (rd at: 2) equals: 1.
-	self assert: (rd at: 3) equals: 'two'.
-	self assert: rd first equals: 1.	
+	self assert: (rd atColumnNamed: 'xk') equals: 1.
+	self assert: (rd atColumnNamed: 'iv') equals: 1.
+	self assert: (rd atColumnNamed: 'tv') equals: 'two'.
+	self assert: (rd atIndex: 1) equals: 1.
+	self assert: (rd atIndex: 2) equals: 1.
+	self assert: (rd atIndex: 3) equals: 'two'.
+	self assert: rd first equals: 1.
 	self assert: rd last equals: 'two'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	rs := db execute: 'insert into x values (NULL, ?)' value: nil.
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'bv') equals: nil.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: nil.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'bv') equals: nil.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: nil.
 	self assert: row first equals: 1.
 	self assert: row last equals: nil.
 	self assert: rs next isNil.
-	rs close.
-
-	 
+	rs close
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	rs := db execute: 'insert into x values (NULL, ?)' value: true.
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'bv') equals: true.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: true.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'bv') equals: true.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: true.
 	self assert: row first equals: 1.
 	self assert: row last equals: true.
 	self assert: rs next isNil.
@@ -251,78 +235,78 @@ SQLite3ConnectionTest >> testExecuteValueInsertChanges [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' value: 1 value: 'two'.
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		value: 1
+		value: 'two'.
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'iv') equals: 1.
-	self assert: (row at: 'tv') equals: 'two'.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: 1.
-	self assert: (row at: 3) equals: 'two'.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'iv') equals: 1.
+	self assert: (row atColumnNamed: 'tv') equals: 'two'.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: 1.
+	self assert: (row atIndex: 3) equals: 'two'.
 	self assert: row first equals: 1.
 	self assert: row last equals: 'two'.
 	self assert: rs next isNil.
-	rs close	 
+	rs close
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelect2 [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' value: 1 value: 'two'.
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		value: 1
+		value: 'two'.
+	self assert: rs next isNil.
 	rs close.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' value: 2 value: 'three'.
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		value: 2
+		value: 'three'.
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'iv') equals: 1.
-	self assert: (row at: 'tv') equals: 'two'.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: 1.
-	self assert: (row at: 3) equals: 'two'.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'iv') equals: 1.
+	self assert: (row atColumnNamed: 'tv') equals: 'two'.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: 1.
+	self assert: (row atIndex: 3) equals: 'two'.
 	self assert: row first equals: 1.
 	self assert: row last equals: 'two'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 2.
-	self assert: (row at: 'iv') equals: 2.
-	self assert: (row at: 'tv') equals: 'three'.
-	self assert: (row at: 1) equals: 2.
-	self assert: (row at: 2) equals: 2.
-	self assert: (row at: 3) equals: 'three'.
+	self assert: (row atColumnNamed: 'xk') equals: 2.
+	self assert: (row atColumnNamed: 'iv') equals: 2.
+	self assert: (row atColumnNamed: 'tv') equals: 'three'.
+	self assert: (row atIndex: 1) equals: 2.
+	self assert: (row atIndex: 2) equals: 2.
+	self assert: (row atIndex: 3) equals: 'three'.
 	self assert: row first equals: 2.
 	self assert: row last equals: 'three'.
 	self assert: rs next isNil.
@@ -332,29 +316,24 @@ SQLite3ConnectionTest >> testExecuteValueInsertThenSelect2 [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 	| row data |
-	
 	res := db basicExecute: 'create table if not exists x (xv datetime);'.
 	self assert: res equals: 0.
-	
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	data := DateAndTime year: 2015 month: 4 day: 1.
 	rs := db execute: 'insert into x values (?)' value: data.
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select xv from x'.	
+	rs := db execute: 'select xv from x'.
 	row := rs next.
-	data := row at: 'xv'.
+	data := row atColumnNamed: 'xv'.
 	self assert: data class equals: DateAndTime.
 	self assert: data year equals: 2015.
 	self assert: data month equals: 4.
 	self assert: data dayOfMonth equals: 1.
-	data := row at: 1.
+	data := row atIndex: 1.
 	self assert: data class equals: DateAndTime.
 	self assert: data year equals: 2015.
 	self assert: data month equals: 4.
@@ -366,126 +345,111 @@ SQLite3ConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertArray [
 	| rd |
-		
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		with: #(1 'two').
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-	
 	rd := (db execute: 'select * from x') rows first.
-	self assert: (rd at: 'xk') equals: 1.
-	self assert: (rd at: 'iv') equals: 1.
-	self assert: (rd at: 'tv') equals: 'two'.
-	self assert: (rd at: 1) equals: 1.
-	self assert: (rd at: 2) equals: 1.
-	self assert: (rd at: 3) equals: 'two'.
-	self assert: rd first equals: 1.	
+	self assert: (rd atColumnNamed: 'xk') equals: 1.
+	self assert: (rd atColumnNamed: 'iv') equals: 1.
+	self assert: (rd atColumnNamed: 'tv') equals: 'two'.
+	self assert: (rd atIndex: 1) equals: 1.
+	self assert: (rd atIndex: 2) equals: 1.
+	self assert: (rd atIndex: 3) equals: 'two'.
+	self assert: rd first equals: 1.
 	self assert: rd last equals: 'two'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
+	rs := db
+		execute: 'insert into x values (NULL, ?)'
+		with: (Array with: nil).
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'bv') equals: nil.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: nil.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'bv') equals: nil.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: nil.
 	self assert: row first equals: 1.
 	self assert: row last equals: nil.
 	self assert: rs next isNil.
-	rs close.
-
-	 
+	rs close
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	rs := db execute: 'insert into x values (NULL, NULL)'.
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'bv') equals: nil.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: nil.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'bv') equals: nil.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: nil.
 	self assert: row first equals: 1.
 	self assert: row last equals: nil.
 	self assert: rs next isNil.
-	rs close	 
+	rs close
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: true).
+	rs := db
+		execute: 'insert into x values (NULL, ?)'
+		with: (Array with: true).
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'bv') equals: true.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: true.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'bv') equals: true.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: true.
 	self assert: row first equals: 1.
 	self assert: row last equals: true.
 	self assert: rs next isNil.
@@ -527,63 +491,62 @@ SQLite3ConnectionTest >> testExecuteWithInsertChanges [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertDictionary [
 	| rd |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, :first, :two)'
+	rs := db
+		execute: 'insert into x values (NULL, :first, :two)'
 		with: (Dictionary newFromPairs: #(':first' 1 ':two' '2' ':nosuch' 3)).
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-	
 	rd := (db execute: 'select * from x') rows first.
-	self assert: (rd at: 'xk') equals: 1.
-	self assert: (rd at: 'iv') equals: 1.
-	self assert: (rd at: 'tv') equals: '2'.
-	self assert: (rd at: 1) equals: 1.
-	self assert: (rd at: 2) equals: 1.
-	self assert: (rd at: 3) equals: '2'.
-	self assert: rd first equals: 1.	
+	self assert: (rd atColumnNamed: 'xk') equals: 1.
+	self assert: (rd atColumnNamed: 'iv') equals: 1.
+	self assert: (rd atColumnNamed: 'tv') equals: '2'.
+	self assert: (rd atIndex: 1) equals: 1.
+	self assert: (rd atIndex: 2) equals: 1.
+	self assert: (rd atIndex: 3) equals: '2'.
+	self assert: rd first equals: 1.
 	self assert: rd last equals: '2'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 	| data s row idx |
-	
-	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
-
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, tv text);'.
+	data := OrderedCollection
+		with: 'English'
+		with: '中文'
+		with: 'にほんご' , 'áěšřčá'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db basicExecute: 'begin'.
 	self assert: res equals: 0.
 	s := db prepare: 'insert into x values (NULL, ?)'.
-	data do: [ :x |
- 		s at: 1 putString: x.
-		s step. s clearBindings. s reset. ].		
+	data
+		do: [ :x | 
+			s at: 1 putString: x.
+			s step.
+			s clearBindings.
+			s reset ].
 	s finalize.
 	res := db basicExecute: 'commit'.
 	self assert: res equals: 0.
-
-	idx := 1.	
-	rs := db execute: 'select xk, tv from x order by xk asc'.	
-	[ (row := rs next) isNotNil ] whileTrue: [
-		self assert: (row at: 'xk') equals: idx.
-		self assert: (row at: 'tv') equals: (data at: idx).
-		idx := idx + 1 ].
+	idx := 1.
+	rs := db execute: 'select xk, tv from x order by xk asc'.
+	[ (row := rs next) isNotNil ]
+		whileTrue: [ self assert: (row atColumnNamed: 'xk') equals: idx.
+			self assert: (row atColumnNamed: 'tv') equals: (data at: idx).
+			idx := idx + 1 ].
 	rs close.
 	self assert: idx equals: 4
 ]
@@ -591,109 +554,99 @@ SQLite3ConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key);'.
+	res := db
+		basicExecute: 'create table if not exists x (xk integer primary key);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	rs := db execute: 'insert into x values (NULL)' with: #().
 	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 1) equals: 1.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atIndex: 1) equals: 1.
 	self assert: row first equals: 1.
 	self assert: row last equals: 1.
 	rs close
-
-	 
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		with: #(1 'two').
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'iv') equals: 1.
-	self assert: (row at: 'tv') equals: 'two'.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: 1.
-	self assert: (row at: 3) equals: 'two'.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'iv') equals: 1.
+	self assert: (row atColumnNamed: 'tv') equals: 'two'.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: 1.
+	self assert: (row atIndex: 3) equals: 'two'.
 	self assert: row first equals: 1.
 	self assert: row last equals: 'two'.
 	self assert: rs next isNil.
-	rs close	 
+	rs close
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect2 [
 	| row |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		with: #(1 'two').
+	self assert: rs next isNil.
 	rs close.
-
-	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(2 'three').
-	self assert: (rs next isNil).
+	rs := db
+		execute: 'insert into x values (NULL, ?, ?)'
+		with: #(2 'three').
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select * from x'.	
+	rs := db execute: 'select * from x'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 1.
-	self assert: (row at: 'iv') equals: 1.
-	self assert: (row at: 'tv') equals: 'two'.
-	self assert: (row at: 1) equals: 1.
-	self assert: (row at: 2) equals: 1.
-	self assert: (row at: 3) equals: 'two'.
+	self assert: (row atColumnNamed: 'xk') equals: 1.
+	self assert: (row atColumnNamed: 'iv') equals: 1.
+	self assert: (row atColumnNamed: 'tv') equals: 'two'.
+	self assert: (row atIndex: 1) equals: 1.
+	self assert: (row atIndex: 2) equals: 1.
+	self assert: (row atIndex: 3) equals: 'two'.
 	self assert: row first equals: 1.
 	self assert: row last equals: 'two'.
 	row := rs next.
-	self assert: (row at: 'xk') equals: 2.
-	self assert: (row at: 'iv') equals: 2.
-	self assert: (row at: 'tv') equals: 'three'.
-	self assert: (row at: 1) equals: 2.
-	self assert: (row at: 2) equals: 2.
-	self assert: (row at: 3) equals: 'three'.
+	self assert: (row atColumnNamed: 'xk') equals: 2.
+	self assert: (row atColumnNamed: 'iv') equals: 2.
+	self assert: (row atColumnNamed: 'tv') equals: 'three'.
+	self assert: (row atIndex: 1) equals: 2.
+	self assert: (row atIndex: 2) equals: 2.
+	self assert: (row atIndex: 3) equals: 'three'.
 	self assert: row first equals: 2.
 	self assert: row last equals: 'three'.
 	self assert: rs next isNil.
@@ -703,100 +656,99 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelect2 [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect3 [
 	| s row idx |
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	res := db
+		basicExecute:
+			'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from x;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db basicExecute: 'begin'.
 	self assert: res equals: 0.
 	s := db prepare: 'insert into x values (NULL, ?, ?)'.
-	1 to: 10 do: [ :x |
+	1 to: 10 do: [ :x | 
 		s at: 1 putInteger: x * x.
-		s at: 2 putString: x asString, ' * ', x asString.
-		s step. s clearBindings. s reset. ].		
+		s at: 2 putString: x asString , ' * ' , x asString.
+		s step.
+		s clearBindings.
+		s reset ].
 	s finalize.
 	res := db basicExecute: 'commit'.
 	self assert: res equals: 0.
-
-	idx := 1.	
-	rs := db execute: 'select * from x where iv < ?' with: #(27).	
-	[ (row := rs next) isNotNil ] whileTrue: [
-		self assert: (row at: 'xk') equals: idx.
-		self assert: (row at: 'iv') equals: (idx * idx).
-		self assert: (row at: 'tv') equals: (idx asString, ' * ', idx asString).
-		self assert: (row at: 1) equals: idx.
-		self assert: (row at: 2) equals: (idx * idx).
-		self assert: (row at: 3) equals: (idx asString, ' * ', idx asString).
-		self assert: row first equals: idx.
-		self assert: row last equals: (idx asString, ' * ', idx asString).
-		idx := idx + 1 ].
+	idx := 1.
+	rs := db execute: 'select * from x where iv < ?' with: #(27).
+	[ (row := rs next) isNotNil ]
+		whileTrue: [ self assert: (row atColumnNamed: 'xk') equals: idx.
+			self assert: (row atColumnNamed: 'iv') equals: idx * idx.
+			self
+				assert: (row atColumnNamed: 'tv')
+				equals: idx asString , ' * ' , idx asString.
+			self assert: (row atIndex: 1) equals: idx.
+			self assert: (row atIndex: 2) equals: idx * idx.
+			self
+				assert: (row atIndex: 3)
+				equals: idx asString , ' * ' , idx asString.
+			self assert: row first equals: idx.
+			self assert: row last equals: idx asString , ' * ' , idx asString.
+			idx := idx + 1 ].
 	rs close.
 	self assert: idx equals: 6
-	 
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 	| data s row idx |
-	
-	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
-
-	res := db basicExecute: 'create table if not exists 表一 (xk integer primary key, tv text);'.
+	data := OrderedCollection
+		with: 'English'
+		with: '中文'
+		with: 'にほんご' , 'áěšřčá'.
+	res := db
+		basicExecute: 'create table if not exists 表一 (xk integer primary key, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from 表一;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db basicExecute: 'begin'.
 	self assert: res equals: 0.
 	s := db prepare: 'insert into 表一 values (NULL, ?)'.
-	data do: [ :x |
- 		s at: 1 putString: x.
-		s step. s clearBindings. s reset. ].		
+	data
+		do: [ :x | 
+			s at: 1 putString: x.
+			s step.
+			s clearBindings.
+			s reset ].
 	s finalize.
 	res := db basicExecute: 'commit'.
 	self assert: res equals: 0.
-
-	idx := 1.	
-	rs := db execute: 'select xk, tv from 表一 order by xk asc'.	
-	[ (row := rs next) isNotNil ] whileTrue: [
-		self assert: (row at: 'xk') equals: idx.
-		self assert: (row at: 'tv') equals: (data at: idx).
-		idx := idx + 1 ].
+	idx := 1.
+	rs := db execute: 'select xk, tv from 表一 order by xk asc'.
+	[ (row := rs next) isNotNil ]
+		whileTrue: [ self assert: (row atColumnNamed: 'xk') equals: idx.
+			self assert: (row atColumnNamed: 'tv') equals: (data at: idx).
+			idx := idx + 1 ].
 	rs close.
 	self assert: idx equals: 4
-	 
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	| row data |
-	
 	res := db basicExecute: 'create table if not exists x (xv datetime);'.
 	self assert: res equals: 0.
-	
 	res := db beginTransaction.
 	self assert: res equals: 0.
-
 	data := DateAndTime year: 2015 month: 4 day: 1.
 	rs := db execute: 'insert into x values (?)' with: (Array with: data).
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
-
 	res := db commitTransaction.
 	self assert: res equals: 0.
-
-	rs := db execute: 'select xv from x'.	
+	rs := db execute: 'select xv from x'.
 	row := rs next.
-	data := row at: 'xv'.
+	data := row atColumnNamed: 'xv'.
 	self assert: data class equals: DateAndTime.
 	self assert: data year equals: 2015.
 	self assert: data month equals: 4.
 	self assert: data dayOfMonth equals: 1.
-	data := row at: 1.
+	data := row atIndex: 1.
 	self assert: data class equals: DateAndTime.
 	self assert: data year equals: 2015.
 	self assert: data month equals: 4.
@@ -808,34 +760,35 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 { #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 	| data s row idx |
-	
-	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
-
-	res := db basicExecute: 'create table if not exists テーブル一 (xk integer primary key, tv text);'.
+	data := OrderedCollection
+		with: 'English'
+		with: '中文'
+		with: 'にほんご' , 'áěšřčá'.
+	res := db
+		basicExecute: 'create table if not exists テーブル一 (xk integer primary key, tv text);'.
 	self assert: res equals: 0.
-	
 	res := db basicExecute: 'delete from テーブル一;'.
-	self assert: res equals: 0.	
-
+	self assert: res equals: 0.
 	res := db basicExecute: 'begin'.
 	self assert: res equals: 0.
 	s := db prepare: 'insert into テーブル一 values (NULL, ?)'.
-	data do: [ :x |
- 		s at: 1 putString: x.
-		s step. s clearBindings. s reset. ].		
+	data
+		do: [ :x | 
+			s at: 1 putString: x.
+			s step.
+			s clearBindings.
+			s reset ].
 	s finalize.
 	res := db basicExecute: 'commit'.
 	self assert: res equals: 0.
-
-	idx := 1.	
-	rs := db execute: 'select xk, tv from テーブル一 order by xk asc'.	
-	[ (row := rs next) isNotNil ] whileTrue: [
-		self assert: (row at: 'xk') equals: idx.
-		self assert: (row at: 'tv') equals: (data at: idx).
-		idx := idx + 1 ].
+	idx := 1.
+	rs := db execute: 'select xk, tv from テーブル一 order by xk asc'.
+	[ (row := rs next) isNotNil ]
+		whileTrue: [ self assert: (row atColumnNamed: 'xk') equals: idx.
+			self assert: (row atColumnNamed: 'tv') equals: (data at: idx).
+			idx := idx + 1 ].
 	rs close.
 	self assert: idx equals: 4
-	 
 ]
 
 { #category : #tests }
@@ -879,119 +832,109 @@ SQLite3ConnectionTest >> testExecuteWithToFail2 [
 { #category : #tests }
 SQLite3ConnectionTest >> testGlorpAutoID [
 	| schema rows |
-	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, STUFF TEXT NOT NULL);'.
-	
 	db basicExecute: schema.
 	db beginTransaction.
-	db execute: 'insert into BOOK (STUFF) values (?)' 
+	db
+		execute: 'insert into BOOK (STUFF) values (?)'
 		with: #('The Bad Beginning').
-	db execute: 'insert into BOOK (STUFF) values (?)' 
+	db
+		execute: 'insert into BOOK (STUFF) values (?)'
 		with: #('Better Now').
-	db commitTransaction.	
-	
+	db commitTransaction.
 	rows := (db execute: 'select last_insert_rowid() as lid') rows.
-	self assert: (rows first at: 'lid') equals: 2.
-	
+	self assert: (rows first atColumnNamed: 'lid') equals: 2.
 	rows := (db execute: 'select * from BOOK') rows.
 	self assert: rows size equals: 2.
-	self assert: (rows first at: 'ID') equals: 1.
-	self assert: (rows first at: 'STUFF') equals: 'The Bad Beginning'.
-	
-
+	self assert: (rows first atColumnNamed: 'ID') equals: 1.
+	self
+		assert: (rows first atColumnNamed: 'STUFF')
+		equals: 'The Bad Beginning'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testGlorpCompositeKey [
 	| schema rows |
-	
 	"This is the schema generated by Glorp."
 	schema := 'CREATE TABLE GR_USER (ID integer  NOT NULL ,NAME text  NULL , CONSTRAINT GR_USER_PK PRIMARY KEY  (ID), CONSTRAINT GR_USER_UNIQ UNIQUE  (ID));'.
-	
 	db basicExecute: schema.
 	db beginTransaction.
 	db execute: 'insert into GR_USER values (?, ?)' with: #(1 'User One').
 	db execute: 'insert into GR_USER values (?, ?)' with: #(2 'User Two').
-	db commitTransaction.	
-	
+	db commitTransaction.
 	rs := db execute: 'select ID,NAME from GR_USER'.
 	rows := rs rows.
-	
 	self assert: rows size equals: 2.
-	self assert: (rows first at: 'ID') equals: 1.
-	self assert: (rows first at: 'NAME') equals: 'User One'
-
+	self assert: (rows first atColumnNamed: 'ID') equals: 1.
+	self assert: (rows first atColumnNamed: 'NAME') equals: 'User One'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	| schema rows |
-	
 	schema := 'CREATE TABLE GR_USER (ID integer  NOT NULL ,NAME text  NULL , CONSTRAINT GR_USER_PK PRIMARY KEY  (ID), CONSTRAINT GR_USER_UNIQ UNIQUE  (ID));'.
-	
 	db basicExecute: schema.
 	db beginTransaction.
-	db execute: 'insert into GR_USER values (?, ?)' 
-		with: #(1 'Fred').
-	self should: [ db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Barney') ]
+	db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Fred').
+	self
+		should:
+			[ db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Barney') ]
 		raise: SQLite3Error.
-	db commitTransaction.	
-	
+	db commitTransaction.
 	rs := db execute: 'select * from GR_USER'.
 	rows := rs rows.
-	
 	self assert: rows size equals: 1.
-	self assert: (rows first at: 'ID') equals: 1.
-	self assert: (rows first at: 'NAME') equals: 'Fred'.
-	
-
+	self assert: (rows first atColumnNamed: 'ID') equals: 1.
+	self assert: (rows first atColumnNamed: 'NAME') equals: 'Fred'
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testGlorpUpdate [
 	| schema rows |
-	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
-	
 	db basicExecute: schema.
 	db beginTransaction.
-	db execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)' 
+	db
+		execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)'
 		with: #('The Bad Beginning' 3 6).
-	db execute: 'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
+	db
+		execute:
+			'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
 		with: #('The Bad Beginning' 6 7 1 6).
-	db commitTransaction.	
-	
+	db commitTransaction.
 	rs := db execute: 'select * from BOOK'.
 	rows := rs rows.
-	
 	self assert: rows size equals: 1.
-	self assert: (rows first at: 'ID') equals: 1.
-	self assert: (rows first at: 'TITLE') equals: 'The Bad Beginning'.
-	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
+	self assert: (rows first atColumnNamed: 'ID') equals: 1.
+	self
+		assert: (rows first atColumnNamed: 'TITLE')
+		equals: 'The Bad Beginning'.
+	self assert: (rows first atColumnNamed: 'COPIES_IN_STOCK') equals: 6
 ]
 
 { #category : #tests }
 SQLite3ConnectionTest >> testGlorpUpdateTwice [
 	| schema rows |
-	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
-	
 	db basicExecute: schema.
 	db beginTransaction.
-	db execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)' 
+	db
+		execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)'
 		with: #('The Bad Beginning' 3 6).
 	db execute: 'UPDATE BOOK SET COPIES_IN_STOCK = 7'.
-	db execute: 'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
+	db
+		execute:
+			'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
 		with: #('The Bad Beginning' 6 7 1 6).
-	db commitTransaction.	
-	
+	db commitTransaction.
 	rs := db execute: 'select * from BOOK'.
 	rows := rs rows.
-	
 	self assert: rows size equals: 1.
-	self assert: (rows first at: 'ID') equals: 1.
-	self assert: (rows first at: 'TITLE') equals: 'The Bad Beginning'.
-	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
+	self assert: (rows first atColumnNamed: 'ID') equals: 1.
+	self
+		assert: (rows first atColumnNamed: 'TITLE')
+		equals: 'The Bad Beginning'.
+	self assert: (rows first atColumnNamed: 'COPIES_IN_STOCK') equals: 6
 ]
 
 { #category : #tests }
@@ -1021,34 +964,37 @@ SQLite3ConnectionTest >> testInsertThenSelectInTransaction [
 { #category : #tests }
 SQLite3ConnectionTest >> testRows [
 	"SQLite uses 1-based column indexing for database rows."
+
 	| rowCount rows any |
-	
 	rowCount := self populateRowsInto: 'junk' of: db.
 	rs := db execute: 'select * from junk'.
 	rs rowClass: SQLite3Row.
 	rows := rs rows.
-	
 	self assert: rows size equals: rowCount.
-	self assert: (rows first at: 'rk') equals: 1.
-	self assert: (rows first at: 'rt') equals: '1-ZZZ'.
-	self assert: (rows first at: 1) equals: 1.
-	self assert: (rows first at: 3) equals: '1-ZZZ'.
-	
-	1 to: 5 do: [ :x |
+	self assert: (rows first atColumnNamed: 'rk') equals: 1.
+	self assert: (rows first atColumnNamed: 'rt') equals: '1-ZZZ'.
+	self assert: (rows first atIndex: 1) equals: 1.
+	self assert: (rows first atIndex: 3) equals: '1-ZZZ'.
+	1 to: 5 do: [ :x | 
 		any := Random new nextInt: rowCount.
-		self assert: ((rows at: any) at: 'rk') equals: any.
-		self assert: ((rows at: any) at: 'rt') equals: (any asString, '-ZZZ').
-		self assert: (((rows at: any) at: 'rn') \\ any) equals: 0.
-		self assert: ((rows at: any) at: 1) equals: any.
-		self assert: (((rows at: any) at: 2) \\ any) equals: 0.
-		self assert: ((rows at: any) at: 3) equals: (any asString, '-ZZZ') ].
-			
-	self assert: (rows last at: 'rk') equals: rowCount.
-	self assert: (rows last at: 'rt') equals: (rowCount asString, '-ZZZ').
-	self assert: (rows last at: 1) equals: rowCount.
-	self assert: (rows last at: 3) equals: (rowCount asString, '-ZZZ').
-		
-
+		self assert: ((rows at: any) atColumnNamed: 'rk') equals: any.
+		self
+			assert: ((rows at: any) atColumnNamed: 'rt')
+			equals: any asString , '-ZZZ'.
+		self assert: ((rows at: any) atColumnNamed: 'rn') \\ any equals: 0.
+		self assert: ((rows at: any) atIndex: 1) equals: any.
+		self assert: ((rows at: any) atIndex: 2) \\ any equals: 0.
+		self
+			assert: ((rows at: any) atIndex: 3)
+			equals: any asString , '-ZZZ' ].
+	self assert: (rows last atColumnNamed: 'rk') equals: rowCount.
+	self
+		assert: (rows last atColumnNamed: 'rt')
+		equals: rowCount asString , '-ZZZ'.
+	self assert: (rows last atIndex: 1) equals: rowCount.
+	self
+		assert: (rows last atIndex: 3)
+		equals: rowCount asString , '-ZZZ'
 ]
 
 { #category : #tests }

@@ -14,47 +14,32 @@ Class {
 
 { #category : #accessing }
 SQLite3Row >> asArray [
-	| c |
-
-	c := OrderedCollection new.
-	1 to: self dataCount do: [ :i |
-		c add: (self atIndex: i) ].
-	^ c asArray
+	^ self data values asArray
 ]
 
 { #category : #accessing }
-SQLite3Row >> at: aKey [ 
-	^ self at: aKey ifAbsent: [  ]
+SQLite3Row >> atColumnNamed: aKey [ 
+	^ self data at: aKey
 ]
 
 { #category : #accessing }
-SQLite3Row >> at: aKey ifAbsent: aBlock [
-	^ data at: aKey ifAbsent: aBlock
+SQLite3Row >> atColumnNamed: aKey ifAbsent: aBlock [
+	^ self data at: aKey ifAbsent: aBlock
 ]
 
 { #category : #accessing }
-SQLite3Row >> at: aKey put: anObject [
-	^ data at: aKey put: anObject
+SQLite3Row >> atColumnNamed: aKey put: anObject [
+	^  self data at: aKey put: anObject
 ]
 
 { #category : #accessing }
 SQLite3Row >> atIndex: anIndex [
-	^ self at: anIndex ifAbsent: [  ]
+	^ self data values at: anIndex
 ]
 
 { #category : #accessing }
 SQLite3Row >> atIndex: anIndex put: anObject [
-	^ data at: anIndex put: anObject
-]
-
-{ #category : #accessing }
-SQLite3Row >> atName: aKey [ 
-	^ self at: aKey ifAbsent: [  ]
-]
-
-{ #category : #accessing }
-SQLite3Row >> atName: aKey put: anObject [
-	^ data at: aKey put: anObject
+	^ self data at: (self data keyAtIndex: anIndex) put: anObject
 ]
 
 { #category : #accessing }
@@ -65,17 +50,17 @@ SQLite3Row >> data [
 
 { #category : #accessing }
 SQLite3Row >> dataCount [
-	^ dataCount
+	^ self data size
 ]
 
 { #category : #accessing }
 SQLite3Row >> dataCount: anObject [
-	dataCount := anObject
+	self error: 'Should not set size by hand.'
 ]
 
 { #category : #accessing }
 SQLite3Row >> first [
-	^ self atIndex: 1
+	^ self data values first
 
 ]
 
@@ -84,16 +69,16 @@ SQLite3Row >> initialize [
 	"Initializes the receiver"
 	
 	super initialize.
-	data := Dictionary new
+	data := OrderedDictionary new
 ]
 
 { #category : #accessing }
 SQLite3Row >> last [
-	^ self atIndex: self dataCount
+	^ self data values last
 
 ]
 
 { #category : #accessing }
 SQLite3Row >> size [
-	^ dataCount
+	^ self data size
 ]

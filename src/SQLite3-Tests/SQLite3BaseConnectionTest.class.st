@@ -10,7 +10,7 @@ Class {
 		'res',
 		'res2'
 	],
-	#category : #'SQLite3-Tests'
+	#category : #'SQLite3-Tests-Connections'
 }
 
 { #category : #tests }

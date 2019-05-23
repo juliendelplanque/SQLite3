@@ -102,25 +102,22 @@ SQLite3ResultSet >> next [
 { #category : #API }
 SQLite3ResultSet >> nextOfClass: aRowClass [
 	| numberOfColumns resultRow resultValue |
-
-	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
-	
-	moreRows ifTrue: [	
-		numberOfColumns := statement dataValuesAvailable.
-		(numberOfColumns = 0)
-			ifTrue: [ ^ nil ] 
-			ifFalse: [ 
-				resultRow := aRowClass new.
-				0 to: numberOfColumns - 1 do: [ :columnIndex | 
-					resultValue := statement valueOfColumn: columnIndex.
-					resultRow atIndex: columnIndex + 1 put: resultValue.
-					resultRow atName: (statement nameOfColumn: columnIndex) put: resultValue ]. 
-				resultRow dataCount: numberOfColumns. 
-				moreRows := (statement step) = ROW.
-				^ resultRow ]].
-		
+	statement
+		ifNil: [ SQLite3Misuse
+				signal: 'This result set does not contain a prepared statement.' ].
+	moreRows
+		ifTrue: [ numberOfColumns := statement dataValuesAvailable.
+			numberOfColumns = 0
+				ifTrue: [ ^ nil ]
+				ifFalse: [ resultRow := aRowClass new.
+					0 to: numberOfColumns - 1 do: [ :columnIndex | 
+						resultValue := statement valueOfColumn: columnIndex.
+						resultRow
+							atColumnNamed: (statement nameOfColumn: columnIndex)
+							put: resultValue ].
+					moreRows := statement step = ROW.
+					^ resultRow ] ].
 	^ nil
-
 ]
 
 { #category : #API }
@@ -172,25 +169,20 @@ SQLite3ResultSet >> rows [
 { #category : #API }
 SQLite3ResultSet >> rowsOfClass: aRowClass [
 	| rows nc rr rv |
-
-	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
-	
+	statement
+		ifNil: [ SQLite3Misuse
+				signal: 'This result set does not contain a prepared statement.' ].
 	rows := OrderedCollection new.
-	[ moreRows ] whileTrue: [	
-		nc := statement dataValuesAvailable.
-		(nc = 0)
-			ifFalse: [ 
-				rr := aRowClass new.
-				0 to: nc - 1 do: [ :c | 
-					rv := statement valueOfColumn: c.
-					rr atIndex: c + 1 put: rv.
-					rr atName: (statement nameOfColumn: c) put: rv ].   
-				rr dataCount: nc. 
-				rows add: rr ].
-		moreRows := (statement step) = 100 " == SQLITE_ROW " ].
-	
+	[ moreRows ]
+		whileTrue: [ nc := statement dataValuesAvailable.
+			nc = 0
+				ifFalse: [ rr := aRowClass new.
+					0 to: nc - 1 do: [ :c | 
+						rv := statement valueOfColumn: c.
+						rr atColumnNamed: (statement nameOfColumn: c) put: rv ].
+					rows add: rr ].
+			moreRows := statement step = 100	" == SQLITE_ROW " ].
 	^ rows
-
 ]
 
 { #category : #accessing }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'connection'
 	],
-	#category : #'SQLite3-Tests'
+	#category : #'SQLite3-Tests-Connections'
 }
 
 { #category : #'tables data' }
@@ -73,14 +73,17 @@ SQLite3SmokeTest >> tearDown [
 { #category : #tests }
 SQLite3SmokeTest >> testInsertAllAgents [
 	| result |
-	self w3cAgentsInsertQueries linesDo: [ :sqlQuery |
-		connection execute: sqlQuery ].
-	
-	result := connection execute: 'SELECT COUNT(*) AS nb_lines FROM AGENTS;'.
-	self assert: (result rows first at: 'nb_lines') equals: 12.
-	
-	result := connection execute: 'SELECT AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NO, COUNTRY AS nb_lines FROM AGENTS;'.
-	self assertCollection: (result rows collect: #asArray) hasSameElements: self agentsRows
+	self w3cAgentsInsertQueries
+		linesDo: [ :sqlQuery | connection execute: sqlQuery ].
+	result := connection
+		execute: 'SELECT COUNT(*) AS nb_lines FROM AGENTS;'.
+	self assert: (result rows first atColumnNamed: 'nb_lines') equals: 12.
+	result := connection
+		execute:
+			'SELECT AGENT_CODE, AGENT_NAME, WORKING_AREA, COMMISSION, PHONE_NO, COUNTRY AS nb_lines FROM AGENTS;'.
+	self
+		assertCollection: (result rows collect: #asArray)
+		hasSameElements: self agentsRows
 ]
 
 { #category : #tests }
