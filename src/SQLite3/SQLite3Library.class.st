@@ -384,10 +384,10 @@ SQLite3Library >> changes: aHandle [
 
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: anInteger on: aHandle [
-	anInteger = SQLITE_OK
-		ifFalse: [ 
-			(anInteger asSQLite3ErrorWithMessage: (self apiErrorMessage: aHandle)) signal ].
-	^ SQLITE_OK
+	[
+		^ anInteger asSQLite3Result
+	] on: NotFound do: [ 
+		(anInteger asSQLite3ErrorWithMessage: (self apiErrorMessage: aHandle)) signal ]
 ]
 
 { #category : #cleaning }
@@ -483,7 +483,6 @@ SQLite3Library >> nameFor: aStatement at: aColumn [
 
 { #category : #'connection handling' }
 SQLite3Library >> open: aFilename via: aHandle [
-	self flag: #TODO. "Maybe the result code shoult not be returned here but a status object or an error signalled instead."
 	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
 

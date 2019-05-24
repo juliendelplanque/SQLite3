@@ -10,10 +10,20 @@ Class {
 	#category : #'SQLite3-Results'
 }
 
+{ #category : #'instance creation' }
+SQLite3Result class >> forResultCode: anInteger [
+	^ (self subclassForResultCode: anInteger) new
+]
+
 { #category : #accessing }
 SQLite3Result class >> resultCode [
 	"Returns the C result code corresponding to the result."
 	^ self subclassResponsibility
+]
+
+{ #category : #accessing }
+SQLite3Result class >> subclassForResultCode: anInteger [
+	^ self subclasses detect: [ :subclass | subclass resultCode = anInteger ]
 ]
 
 { #category : #testing }

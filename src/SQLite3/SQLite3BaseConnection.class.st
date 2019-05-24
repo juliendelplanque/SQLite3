@@ -11,9 +11,6 @@ Class {
 		'library',
 		'statementClass'
 	],
-	#pools : [
-		'SQLite3Constants'
-	],
 	#category : #'SQLite3-Connections'
 }
 
@@ -194,17 +191,8 @@ SQLite3BaseConnection >> on: aFilename [
 
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> open [
-	|errorCode|
-	errorCode := library open: dbFilename via: dbHandle.
-	errorCode = SQLITE_OK
-		ifTrue: [ 
-			isOpen := true.
-			^ self ]	
-		ifFalse: [
-			| error |
-			error := errorCode asSQLite3ErrorWithMessage: (library apiErrorMessage: dbHandle).
-			library apiClose: dbHandle.
-			error signal ]
+	library open: dbFilename via: dbHandle.
+	isOpen := true
 ]
 
 { #category : #'public API - operating' }
