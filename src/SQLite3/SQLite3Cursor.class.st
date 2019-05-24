@@ -37,7 +37,7 @@ SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
 		ifFalse: [
 			(obj isCollection)
 				ifTrue: [ self execute: anSQLText withCollection: obj ]
-				ifFalse: [ SQLite3Error signal: 'Unable to execute SQL on instance of ', obj class asString ]]
+				ifFalse: [ SQLite3CLibraryError signal: 'Unable to execute SQL on instance of ', obj class asString ]]
 	
 
 

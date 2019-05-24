@@ -199,7 +199,7 @@ SQLite3BaseConnection >> open [
 			| err |
 			err := library apiErrorMessage: dbHandle.
 			library apiClose: dbHandle.
-			SQLite3Error signal: err ]
+			SQLite3CLibraryError signal: err ]
 ]
 
 { #category : #'public API - operating' }
@@ -226,7 +226,7 @@ SQLite3BaseConnection >> rollbackTransaction [
 
 { #category : #private }
 SQLite3BaseConnection >> signal: exceptionClass with: value [
-	library signal: exceptionClass with: value on: dbHandle
+	library signal: exceptionClass on: dbHandle
 ]
 
 { #category : #accessing }

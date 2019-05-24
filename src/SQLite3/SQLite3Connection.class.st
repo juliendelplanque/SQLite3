@@ -53,7 +53,7 @@ SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: obj
 SQLite3Connection >> execute: anSQLText with: anObject [
 
 	anObject isString
-		ifTrue: [ SQLite3Error signal: 'Unable to execute SQL on instance of String.' ].
+		ifTrue: [ SQLite3CLibraryError signal: 'Unable to execute SQL on instance of String.' ].
 			
 	^ SQLite3Cursor new execute: anSQLText with: anObject on: self	
 

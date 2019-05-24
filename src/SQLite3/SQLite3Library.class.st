@@ -349,7 +349,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 	self flag: #TODO. "Needs to be reviewed."
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
 	(self class booleanTypes includes: declared asLowercase) ifFalse: [ 
-		SQLite3Error signal: 'Column is not declared as a boolean.' ].
+		SQLite3CLibraryError signal: 'Column is not declared as a boolean.' ].
 
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
 	(selector = #nilAt:) ifTrue: [ ^ nil ].
@@ -361,7 +361,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [
 					(self class booleanSQLFalseWords includes: value asLowercase)
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3Error signal: 'Column value cannot be read as a boolean.' ]]].
+						ifFalse: [ SQLite3CLibraryError signal: 'Column value cannot be read as a boolean.' ]]].
 	(selector = #integerAt:) 
 		ifTrue: [
 			value := self apiColumnInt: aStatement atColumn: aColumn.
@@ -370,7 +370,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [ 
 					(value = 0) 
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3Error signal: 'Column value cannot be read as a boolean.' ]]]	
+						ifFalse: [ SQLite3CLibraryError signal: 'Column value cannot be read as a boolean.' ]]]	
  
  
 ]
@@ -384,16 +384,14 @@ SQLite3Library >> changes: aHandle [
 
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: aValue on: aHandle [
-
-	(aValue = OK)
-		ifFalse: [ 
-			(aValue = BUSY)
+	aValue = OK
+		ifFalse: [ aValue = BUSY
 				ifTrue: [ self signal: SQLite3Busy with: aValue on: aHandle ].
-			(aValue = LOCKED)
+			aValue = LOCKED
 				ifTrue: [ self signal: SQLite3Locked with: aValue on: aHandle ].
-			(aValue = MISUSE)
-				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].				
-			self signal: SQLite3Error with: aValue on: aHandle ].	
+			aValue = MISUSE
+				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].
+			self signal: SQLite3CLibraryError on: aHandle ].
 	^ OK
 ]
 
@@ -526,10 +524,10 @@ SQLite3Library >> reset: aStatementHandle on: aDBHandle [
 ]
 
 { #category : #'private - utilities' }
-SQLite3Library >> signal: exceptionClass with: value on: handle [
-	(exceptionClass new)
-		resultCode: value; 
-		signal: (self apiErrorMessage: handle)
+SQLite3Library >> signal: exceptionClass on: handle [
+	exceptionClass new
+		apiErrorMessage: (self apiErrorMessage: handle);
+		signal
 ]
 
 { #category : #stepping }

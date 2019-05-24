@@ -64,7 +64,7 @@ SQLite3BaseConnectionTest >> testBadOpen [
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
 	db2 := SQLite3BaseConnection on: invalidFilename.
-	self should: [ db2 open ] raise: SQLite3Error.
+	self should: [ db2 open ] raise: SQLite3CLibraryError.
 	self assert: db2 isOpen = false
 ]
 
@@ -82,7 +82,7 @@ SQLite3BaseConnectionTest >> testBasicExecuteOk [
 SQLite3BaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
-		raise: SQLite3Error
+		raise: SQLite3CLibraryError
 	
 ]
 
@@ -95,7 +95,7 @@ SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
 
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3Error ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
 	s finalize.
 	
 ]
@@ -165,7 +165,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 	
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3Error ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
 	s finalize.
 	
 ]
@@ -306,7 +306,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 	
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3Error ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
 	s finalize.
 	
 ]
