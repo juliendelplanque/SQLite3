@@ -64,7 +64,7 @@ SQLite3BaseConnectionTest >> testBadOpen [
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
 	db2 := SQLite3BaseConnection on: invalidFilename.
-	self should: [ db2 open ] raise: SQLite3CantOpen.
+	self should: [ db2 open ] raise: SQLite3Cantopen.
 	self assert: db2 isOpen = false
 ]
 
@@ -82,8 +82,7 @@ SQLite3BaseConnectionTest >> testBasicExecuteOk [
 SQLite3BaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
-		raise: SQLite3CLibraryError
-	
+		raise: SQLite3Error
 ]
 
 { #category : #tests }
