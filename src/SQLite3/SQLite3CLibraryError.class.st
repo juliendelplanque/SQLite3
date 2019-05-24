@@ -20,6 +20,12 @@ SQLite3CLibraryError class >> errorCode [
 ]
 
 { #category : #accessing }
+SQLite3CLibraryError class >> subclassForErrorCode: anInteger [
+	^ self subclasses detect: [ :subclass |
+		subclass errorCode = anInteger ]
+]
+
+{ #category : #accessing }
 SQLite3CLibraryError >> apiErrorMessage [
 	^ apiErrorMessage
 ]
