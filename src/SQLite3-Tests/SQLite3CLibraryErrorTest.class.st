@@ -12,9 +12,9 @@ Class {
 
 { #category : #tests }
 SQLite3CLibraryErrorTest >> testSubclassForErrorCode [
-	self assert: (SQLite3CLibraryError subclassForErrorCode: BUSY) equals: SQLite3Busy.
-	self assert: (SQLite3CLibraryError subclassForErrorCode: LOCKED) equals: SQLite3Locked.
-	self assert: (SQLite3CLibraryError subclassForErrorCode: MISUSE) equals: SQLite3Misuse.
+	self assert: (SQLite3CLibraryError subclassForErrorCode: SQLITE_BUSY) equals: SQLite3Busy.
+	self assert: (SQLite3CLibraryError subclassForErrorCode: SQLITE_LOCKED) equals: SQLite3Locked.
+	self assert: (SQLite3CLibraryError subclassForErrorCode: SQLITE_MISUSE) equals: SQLite3Misuse.
 	
 	self should: [ SQLite3CLibraryError subclassForErrorCode: -100000 ] raise: NotFound.
 ]

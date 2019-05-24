@@ -6,18 +6,18 @@ Class {
 	#superclass : #SharedPool,
 	#classVars : [
 		'BLOB',
-		'BUSY',
-		'CANTOPEN',
-		'CONSTRAINT',
-		'DONE',
-		'ERROR',
 		'FLOAT',
 		'INTEGER',
-		'LOCKED',
-		'MISUSE',
 		'NULL',
-		'OK',
-		'ROW',
+		'SQLITE_BUSY',
+		'SQLITE_CANTOPEN',
+		'SQLITE_CONSTRAINT',
+		'SQLITE_DONE',
+		'SQLITE_ERROR',
+		'SQLITE_LOCKED',
+		'SQLITE_MISUSE',
+		'SQLITE_OK',
+		'SQLITE_ROW',
 		'TEXT'
 	],
 	#category : #'SQLite3-UFFI-Support'
@@ -25,17 +25,7 @@ Class {
 
 { #category : #initialization }
 SQLite3Constants class >> initialize [
-
-	"C function return codes."
-	OK := 0.	
-	ERROR := 1.
-	BUSY := 5.
-	LOCKED := 6.
-	CANTOPEN := 14.
-	CONSTRAINT := 19.	
-	MISUSE := 21.
-	ROW := 100.
-	DONE := 101.
+	self initializeReturnCode.
 			
 	"Types."
 	INTEGER := 1.
@@ -44,4 +34,18 @@ SQLite3Constants class >> initialize [
 	BLOB := 4.	
 	NULL := 5.
 
+]
+
+{ #category : #initialization }
+SQLite3Constants class >> initializeReturnCode [
+	"C function return codes."
+	SQLITE_OK := 0.	
+	SQLITE_ERROR := 1.
+	SQLITE_BUSY := 5.
+	SQLITE_LOCKED := 6.
+	SQLITE_CANTOPEN := 14.
+	SQLITE_CONSTRAINT := 19.	
+	SQLITE_MISUSE := 21.
+	SQLITE_ROW := 100.
+	SQLITE_DONE := 101.
 ]

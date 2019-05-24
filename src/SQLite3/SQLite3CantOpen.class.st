@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 SQLite3CantOpen class >> errorCode [
-	^ CANTOPEN
+	^ SQLITE_CANTOPEN
 ]

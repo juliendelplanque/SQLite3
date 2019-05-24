@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 SQLite3Constraint class >> errorCode [
-	^ CONSTRAINT
+	^ SQLITE_CONSTRAINT
 ]

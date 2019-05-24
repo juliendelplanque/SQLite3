@@ -59,10 +59,10 @@ SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
 	self flag: #TODO. "Once the step will not return an integer anymore, it will be possible to delegate on the object."
 	ret := self step. 
-	(ret = DONE)
+	(ret = SQLITE_DONE)
 		ifTrue: [ aBlock value: self ]
 		ifFalse: [
-			[ ret = ROW ] whileTrue: [
+			[ ret = SQLITE_ROW ] whileTrue: [
 				aBlock value: self.
 				ret := self step ]]
 ]
@@ -184,8 +184,8 @@ SQLite3PreparedStatement >> stepOk: aValue [
 
 	self flag: #TODO. "ROW AND DONE should not be propagated to the caller. Object should be returned to model those instead."
 	"These are normal conditions."	
-	(aValue = ROW) ifTrue: [ ^ ROW ].
-	(aValue = DONE) ifTrue: [ ^ DONE ].
+	(aValue = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
+	(aValue = SQLITE_DONE) ifTrue: [ ^ SQLITE_DONE ].
 	
 	connection signal: (SQLite3CLibraryError subclassForErrorCode: aValue)
 

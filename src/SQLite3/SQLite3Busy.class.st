@@ -9,5 +9,5 @@ Class {
 
 { #category : #accessing }
 SQLite3Busy class >> errorCode [
-	^ BUSY
+	^ SQLITE_BUSY
 ]

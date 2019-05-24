@@ -6,5 +6,5 @@ Class {
 
 { #category : #accessing }
 SQLite3Error class >> errorCode [
-	^ ERROR
+	^ SQLITE_ERROR
 ]

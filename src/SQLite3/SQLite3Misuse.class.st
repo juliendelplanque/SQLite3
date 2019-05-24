@@ -10,5 +10,5 @@ Class {
 
 { #category : #accessing }
 SQLite3Misuse class >> errorCode [
-	^ MISUSE
+	^ SQLITE_MISUSE
 ]

@@ -384,10 +384,10 @@ SQLite3Library >> changes: aHandle [
 
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: aValue on: aHandle [
-	aValue = OK
+	aValue = SQLITE_OK
 		ifFalse: [ 
 			self signal: (SQLite3CLibraryError subclassForErrorCode: aValue) on: aHandle ].
-	^ OK
+	^ SQLITE_OK
 ]
 
 { #category : #cleaning }

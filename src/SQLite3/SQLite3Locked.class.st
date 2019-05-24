@@ -9,5 +9,5 @@ Class {
 
 { #category : #accessing }
 SQLite3Locked class >> errorCode [
-	^ LOCKED
+	^ SQLITE_LOCKED
 ]
