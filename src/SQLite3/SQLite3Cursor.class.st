@@ -49,7 +49,7 @@ SQLite3Cursor >> execute: anSQLText withCollection: aCollection [
 	self prepareStatement: anSQLText.
 	i := 1.
 	aCollection do: [ :v | i := self execute: statement withIndex: i withValue: v ].
-	moreRows := statement step = 100	" == SQLITE_ROW "
+	moreRows := statement step = ROW
 ]
 
 { #category : #private }
@@ -78,7 +78,7 @@ SQLite3Cursor >> execute: anSQLText withKeysAndValues: anObject [
 	self prepareStatement: anSQLText.
 	anObject keysAndValuesDo: [ :k :v | 
 		self execute: statement withKey: k withValue: v ].
-	moreRows := (statement step) = 100. " == SQLITE_ROW "
+	moreRows := (statement step) = ROW
 
 ]
 
@@ -180,7 +180,7 @@ SQLite3Cursor >> rowsOfClass: aRowClass [
 						rv := statement valueOfColumn: c.
 						rr atColumnNamed: (statement nameOfColumn: c) put: rv ].
 					rows add: rr ].
-			moreRows := statement step = 100	" == SQLITE_ROW " ].
+			moreRows := statement step = ROW ].
 	^ rows
 ]
 
