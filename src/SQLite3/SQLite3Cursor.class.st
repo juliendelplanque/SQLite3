@@ -54,8 +54,7 @@ SQLite3Cursor >> execute: anSQLText withCollection: aCollection [
 
 { #category : #private }
 SQLite3Cursor >> execute: aStatement withIndex: anInteger withValue: anObject [
-		
-	aStatement perform: (aStatement dataTypeForObject: anObject) with: anInteger with: anObject.
+	anObject sqlite3PutYourselfAtIndex: anInteger inStatement: aStatement.
 	^ anInteger + 1
 		
 
@@ -67,7 +66,7 @@ SQLite3Cursor >> execute: aStatement withKey: keyObject withValue: valueObject [
 
 	col := aStatement bindParameterIndex: keyObject.
 	(col = 0) ifFalse: [
-		aStatement perform: (aStatement dataTypeForObject: valueObject) with: col with: valueObject ]
+		valueObject sqlite3PutYourselfAtIndex: col inStatement: aStatement. ]
 
 		
 

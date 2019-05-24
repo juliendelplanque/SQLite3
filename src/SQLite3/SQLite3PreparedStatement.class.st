@@ -106,33 +106,6 @@ SQLite3PreparedStatement >> connection: anObject [
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> dataTypeForObject: anObject [
-	self flag: #TODO. "Delgate on objects through extension methods."
-
-	anObject ifNil: [ ^#at:putNil: ].
-
-	(anObject isKindOf: Boolean)
-		ifTrue: [ ^#at:putBoolean: ].
-
-	(anObject isKindOf: Integer)
-		ifTrue: [ ^#at:putInteger: ].
-		
-	(self isFloatLike: anObject)
-		ifTrue: [ ^#at:putFloat: ].
-		
-	(anObject isKindOf: String)
-		ifTrue: [ ^#at:putString: ].
-		
-	(anObject isKindOf: ByteArray)
-		ifTrue: [ ^#at:putByteArray: ].
-		
-	(self isDateAndTimeLike: anObject)
-		ifTrue: [ ^#at:putDateTime: ].
-		
-	^ #at:putObject: 
-]
-
-{ #category : #'public - accessing' }
 SQLite3PreparedStatement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
@@ -175,22 +148,6 @@ SQLite3PreparedStatement >> initialize [
 { #category : #'public - accessing' }
 SQLite3PreparedStatement >> integerAt: aColumn [ 
 	^self library integerFrom: handle at: aColumn
-]
-
-{ #category : #'private - testing' }
-SQLite3PreparedStatement >> isDateAndTimeLike: anObject [
-
-	^ ((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Date ])
-			or: [ anObject isKindOf: Time ]
-		
-
-]
-
-{ #category : #'private - testing' }
-SQLite3PreparedStatement >> isFloatLike: anObject [
-	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
-		
-
 ]
 
 { #category : #private }
