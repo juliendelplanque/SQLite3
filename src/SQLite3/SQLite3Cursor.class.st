@@ -27,7 +27,11 @@ SQLite3Cursor >> close [
 { #category : #private }
 SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
 	| obj |
-
+	self flag: #TODO. "Dispatch on anObject instead of doing lot of conditional."
+	
+	anObject isString
+		ifTrue: [ SQLite3GenericError signal: 'Unable to execute SQL on instance of String.' ].
+	
 	db := aDb.
 
 	obj := anObject isNil ifTrue: [ #() ] ifFalse: [ anObject ].
@@ -37,10 +41,7 @@ SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
 		ifFalse: [
 			(obj isCollection)
 				ifTrue: [ self execute: anSQLText withCollection: obj ]
-				ifFalse: [ SQLite3CLibraryError signal: 'Unable to execute SQL on instance of ', obj class asString ]]
-	
-
-
+				ifFalse: [ SQLite3GenericError signal: 'Unable to execute SQL on instance of ', obj class asString ]]
 ]
 
 { #category : #private }

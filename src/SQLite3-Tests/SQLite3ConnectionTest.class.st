@@ -804,7 +804,7 @@ SQLite3ConnectionTest >> testExecuteWithToFail [
 	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: 42 ]
-		raise: SQLite3CLibraryError.
+		raise: SQLite3GenericError.
 
 	res := db rollbackTransaction.
 	self assert: res equals: 0
@@ -823,7 +823,7 @@ SQLite3ConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: '42' ]
-		raise: SQLite3CLibraryError.
+		raise: SQLite3GenericError.
 
 	res := db rollbackTransaction.
 	self assert: res equals: 0
@@ -879,7 +879,7 @@ SQLite3ConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	self
 		should:
 			[ db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Barney') ]
-		raise: SQLite3CLibraryError.
+		raise: SQLite3Constraint.
 	db commitTransaction.
 	rs := db execute: 'select * from GR_USER'.
 	rows := rs rows.

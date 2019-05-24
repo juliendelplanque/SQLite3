@@ -94,7 +94,7 @@ SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
 
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3GenericError ].
 	s finalize.
 	
 ]
@@ -164,7 +164,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 	
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3GenericError ].
 	s finalize.
 	
 ]
@@ -305,7 +305,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 	
 	s := db prepare: 'select xv from x'.
 	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3CLibraryError ].
+		self should: [ row booleanAt: 0 ] raise: SQLite3GenericError ].
 	s finalize.
 	
 ]

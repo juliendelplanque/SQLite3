@@ -349,7 +349,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 	self flag: #TODO. "Needs to be reviewed."
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
 	(self class booleanTypes includes: declared asLowercase) ifFalse: [ 
-		SQLite3CLibraryError signal: 'Column is not declared as a boolean.' ].
+		SQLite3GenericError signal: 'Column is not declared as a boolean.' ].
 
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
 	(selector = #nilAt:) ifTrue: [ ^ nil ].
@@ -361,7 +361,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [
 					(self class booleanSQLFalseWords includes: value asLowercase)
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3CLibraryError signal: 'Column value cannot be read as a boolean.' ]]].
+						ifFalse: [ SQLite3GenericError signal: 'Column value cannot be read as a boolean.' ]]].
 	(selector = #integerAt:) 
 		ifTrue: [
 			value := self apiColumnInt: aStatement atColumn: aColumn.
@@ -370,7 +370,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [ 
 					(value = 0) 
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3CLibraryError signal: 'Column value cannot be read as a boolean.' ]]]	
+						ifFalse: [ SQLite3GenericError signal: 'Column value cannot be read as a boolean.' ]]]	
  
  
 ]
@@ -482,7 +482,8 @@ SQLite3Library >> nameFor: aStatement at: aColumn [
 ]
 
 { #category : #'connection handling' }
-SQLite3Library >> open: aFilename via: aHandle [	
+SQLite3Library >> open: aFilename via: aHandle [
+	self flag: #TODO. "Maybe the result code shoult not be returned here but a status object or an error signalled instead."
 	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
 
