@@ -429,6 +429,7 @@ See comment in #apiConfigLoadExtension:with:with:with:."
 
 { #category : #configuring }
 SQLite3Library >> enableLoadExtension: aHandle [
+	self flag: #TODO. "Create SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION variable in shared pool."
 	^ self checkForOk: (self apiConfigLoadExtension: aHandle with: 1005 with: 1 with: ExternalAddress new) 
 		on: aHandle
 		
