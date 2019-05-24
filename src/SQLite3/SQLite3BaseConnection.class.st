@@ -202,9 +202,7 @@ SQLite3BaseConnection >> open [
 			^ self ]	
 		ifFalse: [
 			| error |
-			error := (SQLite3CLibraryError subclassForErrorCode: errorCode) new
-							apiErrorMessage: (library apiErrorMessage: dbHandle);
-							yourself.
+			error := errorCode asSQLite3ErrorWithMessage: (library apiErrorMessage: dbHandle).
 			library apiClose: dbHandle.
 			error signal ]
 ]

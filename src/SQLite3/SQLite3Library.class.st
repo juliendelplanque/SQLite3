@@ -383,10 +383,10 @@ SQLite3Library >> changes: aHandle [
 ]
 
 { #category : #'private - utilities' }
-SQLite3Library >> checkForOk: aValue on: aHandle [
-	aValue = SQLITE_OK
+SQLite3Library >> checkForOk: anInteger on: aHandle [
+	anInteger = SQLITE_OK
 		ifFalse: [ 
-			self signal: (SQLite3CLibraryError subclassForErrorCode: aValue) on: aHandle ].
+			(anInteger asSQLite3ErrorWithMessage: (self apiErrorMessage: aHandle)) signal ].
 	^ SQLITE_OK
 ]
 

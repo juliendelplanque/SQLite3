@@ -180,14 +180,14 @@ SQLite3PreparedStatement >> step [
 ]
 
 { #category : #private }
-SQLite3PreparedStatement >> stepOk: aValue [
+SQLite3PreparedStatement >> stepOk: anInteger [
 
 	self flag: #TODO. "ROW AND DONE should not be propagated to the caller. Object should be returned to model those instead."
 	"These are normal conditions."	
-	(aValue = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
-	(aValue = SQLITE_DONE) ifTrue: [ ^ SQLITE_DONE ].
+	(anInteger = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
+	(anInteger = SQLITE_DONE) ifTrue: [ ^ SQLITE_DONE ].
 	
-	connection signal: (SQLite3CLibraryError subclassForErrorCode: aValue)
+	connection signal: anInteger asSQLite3ErrorClass
 
 ]
 

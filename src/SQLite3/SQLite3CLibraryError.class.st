@@ -13,10 +13,24 @@ Class {
 	#category : #'SQLite3-Errors'
 }
 
+{ #category : #'instance creation' }
+SQLite3CLibraryError class >> apiErrorMessage: aString [
+	^ self new
+		apiErrorMessage: aString;
+		yourself
+]
+
 { #category : #accessing }
 SQLite3CLibraryError class >> errorCode [
 	"Returns the error code as defined by SQLite C library."
 	^ self subclassResponsibility
+]
+
+{ #category : #'instance creation' }
+SQLite3CLibraryError class >> forErrorCode: anInteger apiErrorMessage: aString [
+	^ (self subclassForErrorCode: anInteger)
+			apiErrorMessage: aString;
+			yourself
 ]
 
 { #category : #accessing }
