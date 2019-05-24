@@ -204,7 +204,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
 	res := db basicExecute: 'begin'.
 	self assert: (res = 0).
 	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putNil: nil.
+	s putNilAt: 1.
 	s step. s finalize.
 	res := db basicExecute: 'commit'.
 	self assert: (res = 0).

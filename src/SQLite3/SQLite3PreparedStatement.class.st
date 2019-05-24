@@ -50,13 +50,6 @@ SQLite3PreparedStatement >> at: aColumn putInteger: anInteger [
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> at: aColumn putNil: anObject [
-	"Goofy interface note - anObject is ignored here."
-	"When used by SQLite3Connection, anObject will always be nil."
-	^ self library with: handle putNullAt: aColumn
-]
-
-{ #category : #'public - accessing' }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
@@ -164,6 +157,11 @@ SQLite3PreparedStatement >> nameOfColumn: aColumn [
 SQLite3PreparedStatement >> nilAt: aColumn [
 	self flag: #TODO. "Strange ? What is column does not exists?"
 	^ nil  
+]
+
+{ #category : #'public - accessing' }
+SQLite3PreparedStatement >> putNilAt: aColumn [
+	^ self library with: handle putNullAt: aColumn
 ]
 
 { #category : #public }
