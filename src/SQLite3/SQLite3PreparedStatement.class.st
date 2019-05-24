@@ -20,7 +20,7 @@ SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 	^ self library 
 		with: handle 
 		at: aColumn 
-		putInteger: (aBoolean ifTrue: [ 1 ] ifFalse: [ 0 ])
+		putInteger: aBoolean asBit
 		
 "See http://www.sqlite.org/datatype3.html."
 ]
