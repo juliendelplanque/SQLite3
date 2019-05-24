@@ -187,14 +187,7 @@ SQLite3PreparedStatement >> stepOk: aValue [
 	(aValue = ROW) ifTrue: [ ^ ROW ].
 	(aValue = DONE) ifTrue: [ ^ DONE ].
 	
-	"These are error conditions."
-	(aValue = BUSY)
-		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
-	(aValue = MISUSE)
-		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
-
-	"Catch any error not specifically handled above."
-	connection signal: SQLite3CLibraryError with: aValue
+	connection signal: (SQLite3CLibraryError subclassForErrorCode: aValue)
 
 ]
 

@@ -225,7 +225,7 @@ SQLite3BaseConnection >> rollbackTransaction [
 ]
 
 { #category : #private }
-SQLite3BaseConnection >> signal: exceptionClass with: value [
+SQLite3BaseConnection >> signal: exceptionClass [
 	library signal: exceptionClass on: dbHandle
 ]
 

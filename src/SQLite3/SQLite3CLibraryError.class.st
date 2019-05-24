@@ -3,7 +3,7 @@ I represent an error converted from a SQLite3 C library's error code.
 "
 Class {
 	#name : #SQLite3CLibraryError,
-	#superclass : #SQLite3Error,
+	#superclass : #SQLite3AbstractError,
 	#instVars : [
 		'apiErrorMessage'
 	],

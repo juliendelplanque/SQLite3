@@ -64,7 +64,7 @@ SQLite3BaseConnectionTest >> testBadOpen [
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
 	db2 := SQLite3BaseConnection on: invalidFilename.
-	self should: [ db2 open ] raise: SQLite3CLibraryError.
+	self should: [ db2 open ] raise: SQLite3CantOpen.
 	self assert: db2 isOpen = false
 ]
 

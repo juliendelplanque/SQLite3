@@ -385,13 +385,8 @@ SQLite3Library >> changes: aHandle [
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: aValue on: aHandle [
 	aValue = OK
-		ifFalse: [ aValue = BUSY
-				ifTrue: [ self signal: SQLite3Busy with: aValue on: aHandle ].
-			aValue = LOCKED
-				ifTrue: [ self signal: SQLite3Locked with: aValue on: aHandle ].
-			aValue = MISUSE
-				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].
-			self signal: SQLite3CLibraryError on: aHandle ].
+		ifFalse: [ 
+			self signal: (SQLite3CLibraryError subclassForErrorCode: aValue) on: aHandle ].
 	^ OK
 ]
 

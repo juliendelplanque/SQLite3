@@ -7,6 +7,7 @@ Class {
 	#classVars : [
 		'BLOB',
 		'BUSY',
+		'CANTOPEN',
 		'CONSTRAINT',
 		'DONE',
 		'ERROR',
@@ -30,6 +31,7 @@ SQLite3Constants class >> initialize [
 	ERROR := 1.
 	BUSY := 5.
 	LOCKED := 6.
+	CANTOPEN := 14.
 	CONSTRAINT := 19.	
 	MISUSE := 21.
 	ROW := 100.

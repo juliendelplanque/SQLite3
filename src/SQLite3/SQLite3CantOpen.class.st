@@ -1,10 +1,10 @@
 Class {
-	#name : #SQLite3Error,
+	#name : #SQLite3CantOpen,
 	#superclass : #SQLite3CLibraryError,
 	#category : #'SQLite3-Errors'
 }
 
 { #category : #accessing }
-SQLite3Error class >> errorCode [
-	^ ERROR
+SQLite3CantOpen class >> errorCode [
+	^ CANTOPEN
 ]
