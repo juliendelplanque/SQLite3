@@ -384,9 +384,7 @@ SQLite3Library >> changes: aHandle [
 
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: anInteger on: aHandle [
-	[
-		^ anInteger asSQLite3Result
-	] on: NotFound do: [ 
+	^ anInteger asSQLite3ResultIfNoneMatch: [ 
 		(anInteger asSQLite3ErrorWithMessage: (self apiErrorMessage: aHandle)) signal ]
 ]
 
@@ -533,10 +531,8 @@ SQLite3Library >> sqlText: aStatementHandle [
 ]
 
 { #category : #stepping }
-SQLite3Library >> step: aStatementHandle [	
-	^ self apiStep: aStatementHandle
-	
-
+SQLite3Library >> step: aStatementHandle on: dbHandle [
+	^ self checkForOk: (self apiStep: aStatementHandle) on: dbHandle
 ]
 
 { #category : #operating }

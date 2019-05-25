@@ -227,6 +227,11 @@ SQLite3BaseConnection >> statementClass [
 	^ statementClass
 ]
 
+{ #category : #private }
+SQLite3BaseConnection >> step: preparedStatementHandle [
+	^ library step: preparedStatementHandle on: dbHandle
+]
+
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> tableNames [
 	| tables s |

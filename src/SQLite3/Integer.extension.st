@@ -16,6 +16,13 @@ Integer >> asSQLite3Result [
 ]
 
 { #category : #'*SQLite3' }
+Integer >> asSQLite3ResultIfNoneMatch: aBlock [
+	^ [ 
+		SQLite3Result forResultCode: self
+	] on: NotFound do: aBlock
+]
+
+{ #category : #'*SQLite3' }
 Integer >> sqlite3PutYourselfAtIndex: index inStatement: aStatement [
 	^ aStatement at: index putInteger: self
 ]

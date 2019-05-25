@@ -8,9 +8,6 @@ Class {
 		'connection',
 		'handle'
 	],
-	#pools : [
-		'SQLite3Constants'
-	],
 	#category : #'SQLite3-Database'
 }
 
@@ -56,15 +53,14 @@ SQLite3PreparedStatement >> at: aColumn putString: aString [
 
 { #category : #public }
 SQLite3PreparedStatement >> basicExecute: aBlock [
-	| ret |
-	self flag: #TODO. "Once the step will not return an integer anymore, it will be possible to delegate on the object."
-	ret := self step. 
-	(ret = SQLITE_DONE)
+	| result |
+	result := self step. 
+	result isDone
 		ifTrue: [ aBlock value: self ]
 		ifFalse: [
-			[ ret = SQLITE_ROW ] whileTrue: [
+			[ result isRow ] whileTrue: [
 				aBlock value: self.
-				ret := self step ]]
+				result := self step ]]
 ]
 
 { #category : #'public - accessing' }
@@ -176,19 +172,7 @@ SQLite3PreparedStatement >> sqlText [
 
 { #category : #public }
 SQLite3PreparedStatement >> step [
-	^ self stepOk: (self library step: handle)
-]
-
-{ #category : #private }
-SQLite3PreparedStatement >> stepOk: anInteger [
-
-	self flag: #TODO. "ROW AND DONE should not be propagated to the caller. Object should be returned to model those instead."
-	"These are normal conditions."	
-	(anInteger = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
-	(anInteger = SQLITE_DONE) ifTrue: [ ^ SQLITE_DONE ].
-	
-	connection signal: anInteger asSQLite3ErrorClass
-
+	^ connection step: handle
 ]
 
 { #category : #operating }
@@ -203,6 +187,7 @@ SQLite3PreparedStatement >> typeOfColumn: aColumn [
 
 { #category : #public }
 SQLite3PreparedStatement >> valueOfColumn: aColumn [
+	self flag: #TODO. "Refactor to avoid perform..."
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
 
 ]
