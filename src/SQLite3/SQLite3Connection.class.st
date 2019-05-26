@@ -16,42 +16,37 @@ SQLite3Connection >> execute: anSQLText [
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: anObject [
 
-	^ SQLite3Cursor new execute: anSQLText 
-		with: (Array with: anObject) 
-		on: self	
+	^ (SQLite3Cursor on: self)
+			execute: anSQLText with: (Array with: anObject)
 
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 [
 
-	^ SQLite3Cursor new execute: anSQLText 
-		with: (Array with: object1 with: object2) 
-		on: self	
+	^ (SQLite3Cursor on: self)
+			execute: anSQLText with: (Array with: object1 with: object2)
 
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 [
 
-	^ SQLite3Cursor new execute: anSQLText 
-		with: (Array with: object1 with: object2 with: object3) 
-		on: self	
-
+	^ (SQLite3Cursor on: self)
+			execute: anSQLText with: (Array with: object1 with: object2 with: object3)
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 value: object4 [
 
-	^ SQLite3Cursor new execute: anSQLText 
-		with: (Array with: object1 with: object2 with: object3 with: object4) 
-		on: self	
+	^ (SQLite3Cursor on: self)
+			execute: anSQLText with: (Array with: object1 with: object2 with: object3 with: object4)
 
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText with: anObject [
-	^ SQLite3Cursor new execute: anSQLText with: anObject on: self	
+	^ (SQLite3Cursor on: self) execute: anSQLText with: anObject
 
 ]
 

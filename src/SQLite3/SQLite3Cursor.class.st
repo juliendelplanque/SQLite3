@@ -6,13 +6,20 @@ Class {
 	#name : #SQLite3Cursor,
 	#superclass : #Object,
 	#instVars : [
-		'db',
 		'statement',
 		'moreRows',
-		'rowClass'
+		'rowClass',
+		'connection'
 	],
 	#category : #'SQLite3-Database'
 }
+
+{ #category : #'instance creation' }
+SQLite3Cursor class >> on: aSQLite3Connection [
+	^ self new
+		connection: aSQLite3Connection;
+		yourself
+]
 
 { #category : #API }
 SQLite3Cursor >> close [
@@ -21,9 +28,18 @@ SQLite3Cursor >> close [
 	statement := nil
 ]
 
+{ #category : #accessing }
+SQLite3Cursor >> connection [
+	^ connection
+]
+
+{ #category : #accessing }
+SQLite3Cursor >> connection: anObject [
+	connection := anObject
+]
+
 { #category : #private }
-SQLite3Cursor >> execute: aSQLString with: anObject on: aDb [
-	db := aDb.
+SQLite3Cursor >> execute: aSQLString with: anObject [
 	anObject sqlite3BeArgumentForExecutionOf: aSQLString by: self
 ]
 
@@ -118,7 +134,7 @@ SQLite3Cursor >> onlyRow: ifNoneBlock [
 { #category : #private }
 SQLite3Cursor >> prepareStatement: anSQLText [
 
-	statement := db prepare: anSQLText.
+	statement := self connection prepare: anSQLText.
 	statement clearBindings.
 	statement reset
 
@@ -142,20 +158,10 @@ SQLite3Cursor >> rows [
 
 { #category : #API }
 SQLite3Cursor >> rowsOfClass: aRowClass [
-	| rows nc rr rv |
-	statement
-		ifNil: [ SQLite3Misuse
-				signal: 'This result set does not contain a prepared statement.' ].
+	| rows  |
 	rows := OrderedCollection new.
 	[ moreRows ]
-		whileTrue: [ nc := statement dataValuesAvailable.
-			nc = 0
-				ifFalse: [ rr := aRowClass new.
-					0 to: nc - 1 do: [ :c | 
-						rv := statement valueOfColumn: c.
-						rr atColumnNamed: (statement nameOfColumn: c) put: rv ].
-					rows add: rr ].
-			moreRows := statement step isRow ].
+		whileTrue: [ rows add: (self nextOfClass: aRowClass) ].
 	^ rows
 ]
 
