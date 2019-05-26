@@ -12,7 +12,7 @@ Class {
 		'library',
 		'statementClass'
 	],
-	#category : #'SQLite3-Connections'
+	#category : #'SQLite3-Model'
 }
 
 { #category : #examples }
@@ -237,6 +237,15 @@ SQLite3Connection >> rollbackTransaction [
 { #category : #private }
 SQLite3Connection >> signal: exceptionClass [
 	library signal: exceptionClass on: dbHandle
+]
+
+{ #category : #'as yet unclassified' }
+SQLite3Connection >> signal: exceptionClass with: value [
+	self
+		deprecated: 'Please use #signal: instead'
+		transformWith: '`@receiver signal: `@statements1 with: `@statements2' 
+						-> '`@receiver signal: `@statements1'.
+	self signal: exceptionClass
 ]
 
 { #category : #accessing }

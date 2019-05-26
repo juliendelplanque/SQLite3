@@ -11,7 +11,7 @@ Class {
 		'rowClass',
 		'connection'
 	],
-	#category : #'SQLite3-Database'
+	#category : #'SQLite3-Model'
 }
 
 { #category : #'instance creation' }

@@ -8,7 +8,7 @@ Class {
 		'connection',
 		'handle'
 	],
-	#category : #'SQLite3-Database'
+	#category : #'SQLite3-Model'
 }
 
 { #category : #'public - accessing' }
@@ -44,6 +44,23 @@ SQLite3PreparedStatement >> at: aColumn putFloat: anNumber [
 SQLite3PreparedStatement >> at: aColumn putInteger: anInteger [
 
 	^ self library with: handle at: aColumn putInteger: anInteger
+]
+
+{ #category : #'as yet unclassified' }
+SQLite3PreparedStatement >> at: aColumn putNil: anObject [
+	"Goofy interface note - anObject is ignored here."
+	"When used by SQLite3Connection, anObject will always be nil."
+	self
+		deprecated: 'Please use #putNilAt: instead'
+		transformWith: '`@receiver at: `@statements1 putNil: `@statements2' 
+						-> '`@receiver putNilAt: `@statements1'.
+	^ self putNilAt: aColumn
+]
+
+{ #category : #'as yet unclassified' }
+SQLite3PreparedStatement >> at: aColumn putObject: anObject [
+	self deprecated: 'Do not use, will be removed soon to avoid dependency on Fuel.'.
+	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
 
 { #category : #'public - accessing' }
@@ -153,6 +170,12 @@ SQLite3PreparedStatement >> nameOfColumn: aColumn [
 SQLite3PreparedStatement >> nilAt: aColumn [
 	self flag: #TODO. "Strange ? What is column does not exists?"
 	^ nil  
+]
+
+{ #category : #'as yet unclassified' }
+SQLite3PreparedStatement >> objectAt: aColumn [
+	self deprecated: 'Should not be used anymore. We remove dependency on Fuel.'.
+	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
 ]
 
 { #category : #'public - accessing' }
