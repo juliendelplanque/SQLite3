@@ -12,6 +12,5 @@ BaselineOfSQLite3 >> baseline: spec [
 		do: [
 			spec
 				package: 'SQLite3';
-				package: 'SQLite3-Tests' with: [ spec requires: 'SQLite3' ];
-				package: 'SQLite3-Deprecated' with: [ spec requires: 'SQLite3' ] ]
+				package: 'SQLite3-Tests' with: [ spec requires: 'SQLite3' ] ]
 ]
