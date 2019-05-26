@@ -120,7 +120,7 @@ SQLite3Cursor >> prepareStatement: anSQLText [
 
 	statement := db prepare: anSQLText.
 	statement clearBindings.
-	statement	reset
+	statement reset
 
 ]
 
