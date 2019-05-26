@@ -163,11 +163,10 @@ SQLite3Cursor >> rows [
 
 { #category : #API }
 SQLite3Cursor >> rowsOfClass: aRowClass [
-	| rows  |
-	rows := OrderedCollection new.
-	[ moreRows ]
-		whileTrue: [ rows add: (self nextOfClass: aRowClass) ].
-	^ rows
+	^ Array streamContents: [ :stream |
+		[ moreRows ]
+			whileTrue: [ stream nextPut: (self nextOfClass: aRowClass) ]
+	 ]
 ]
 
 { #category : #accessing }
