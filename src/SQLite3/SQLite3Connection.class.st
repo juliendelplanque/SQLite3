@@ -49,8 +49,3 @@ SQLite3Connection >> execute: anSQLText with: anObject [
 	^ (SQLite3Cursor on: self) execute: anSQLText with: anObject
 
 ]
-
-{ #category : #accessing }
-SQLite3Connection >> queryEncoding [
-	^ #utf8
-]
