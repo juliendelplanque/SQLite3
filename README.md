@@ -93,6 +93,38 @@ connection execute: 'INSERT INTO person(name,age) VALUES (@name, @age);' with: {
 	'@age' -> 30 } asDictionary.
 ```
 
+## Gather results from a query
+All calls to execute return a `SQLite3Cursor` object.
+This object allows one to retrieve the results of the query.
+
+```st
+cursor := connection execute: 'SELECT * FROM person;'.
+```
+
+One can ask a cursor if it has more results to provide.
+
+```st
+cursor hasNext. "true"
+```
+
+If the answer is true, the next row of results can be retrieved.
+
+```st
+cursor next. "a SQLite3Row(id : 1, name : 'Cyril', age : 25)"
+```
+
+It is also possible to ask for all remaining rows of the cursor as an array.
+
+```st
+cursor rows. "an Array(a SQLite3Row(id : 2, name : 'Julien', age : 24) a SQLite3Row(id : 3, name : 'Guillaume', age : 30) )"
+```
+
+Thus, the cursor has no more row to provide.
+
+```st
+cursor hasNext. "false"
+```
+
 ## Closing a connection
 Either memory and file databases need to be closed when no longer needed.
 This can be achieve using `#close` message.
