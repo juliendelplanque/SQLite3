@@ -89,6 +89,11 @@ SQLite3PreparedStatement >> clearBindings [
 	connection clearBindings: self
 ]
 
+{ #category : #accessing }
+SQLite3PreparedStatement >> connection [
+	^ connection
+]
+
 { #category : #'private - accessing' }
 SQLite3PreparedStatement >> connection: anObject [
 	connection := anObject
