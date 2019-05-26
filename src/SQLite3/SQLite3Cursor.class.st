@@ -73,6 +73,11 @@ SQLite3Cursor >> execute: anSQLText withKeysAndValues: anObject [
 
 ]
 
+{ #category : #testing }
+SQLite3Cursor >> hasNext [
+	^ moreRows
+]
+
 { #category : #initialization }
 SQLite3Cursor >> initialize [
 	"Initializes the receiver"
