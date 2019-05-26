@@ -1,7 +1,7 @@
-Extension { #name : #SQLite3BaseConnection }
+Extension { #name : #SQLite3Connection }
 
 { #category : #'*SQLite3-Deprecated' }
-SQLite3BaseConnection >> signal: exceptionClass with: value [
+SQLite3Connection >> signal: exceptionClass with: value [
 	self
 		deprecated: 'Please use #signal: instead'
 		transformWith: '`@receiver signal: `@statements1 with: `@statements2' 

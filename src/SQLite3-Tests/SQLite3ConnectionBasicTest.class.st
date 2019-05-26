@@ -2,7 +2,7 @@
 Unit tests for UDBCSQLiteBaseConnection
 "
 Class {
-	#name : #SQLite3BaseConnectionTest,
+	#name : #SQLite3ConnectionBasicTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'db',
@@ -14,7 +14,7 @@ Class {
 }
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> noTestColumnNamesBobbyGo [
+SQLite3ConnectionBasicTest >> noTestColumnNamesBobbyGo [
 	"In this test, Bobby Tables strikes naive SQL string construction."
 	"20190302, pierce: #basicExecute: uses prepare/step/finalize internally and is no longer susceptible to injection attacks. "
 	| tables bobby |
@@ -41,16 +41,16 @@ SQLite3BaseConnectionTest >> noTestColumnNamesBobbyGo [
 ]
 
 { #category : #running }
-SQLite3BaseConnectionTest >> setUp [ 
+SQLite3ConnectionBasicTest >> setUp [ 
 
 	super setUp.
-	db := SQLite3BaseConnection on: ':memory:'.
+	db := SQLite3Connection on: ':memory:'.
 	db open.
 
 ]
 
 { #category : #running }
-SQLite3BaseConnectionTest >> tearDown [
+SQLite3ConnectionBasicTest >> tearDown [
 	
 	[ db close ] on: SQLite3Misuse do: [ ].
 	super tearDown.
@@ -58,18 +58,18 @@ SQLite3BaseConnectionTest >> tearDown [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBadOpen [
+SQLite3ConnectionBasicTest >> testBadOpen [
 	| invalidFilename |
 	invalidFilename := Smalltalk os isWindows
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
-	db2 := SQLite3BaseConnection on: invalidFilename.
+	db2 := SQLite3Connection on: invalidFilename.
 	self should: [ db2 open ] raise: SQLite3Cantopen.
 	self assert: db2 isOpen = false
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBasicExecuteOk [
+SQLite3ConnectionBasicTest >> testBasicExecuteOk [
 
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
 	self assert: (res = 0).
@@ -79,14 +79,14 @@ SQLite3BaseConnectionTest >> testBasicExecuteOk [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBasicExecuteSyntaxError [
+SQLite3ConnectionBasicTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
 		raise: SQLite3Error
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
+SQLite3ConnectionBasicTest >> testBooleanColumnTypeMismatch [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv notboolean);'.
@@ -100,7 +100,7 @@ SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanObject [
+SQLite3ConnectionBasicTest >> testBooleanObject [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -124,7 +124,7 @@ SQLite3BaseConnectionTest >> testBooleanObject [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteIntegerOneThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -148,7 +148,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteIntegerTwoThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -170,7 +170,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteIntegerZeroThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -194,7 +194,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteNilThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -218,7 +218,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteSQLNullThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteSQLNullThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -241,7 +241,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteSQLNullThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteStringFalseThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteStringFalseThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -265,7 +265,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteStringTrueThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteStringTrueThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -289,7 +289,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTrueThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteStringTwoThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -311,7 +311,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
+SQLite3ConnectionBasicTest >> testBooleanWriteThenRead [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
@@ -335,7 +335,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testColumnNames [
+SQLite3ConnectionBasicTest >> testColumnNames [
 	| columns |
 	
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
@@ -349,7 +349,7 @@ SQLite3BaseConnectionTest >> testColumnNames [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
+SQLite3ConnectionBasicTest >> testColumnNamesBobbyStop [
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
 	| columns tables |
 	
@@ -375,7 +375,7 @@ SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
+SQLite3ConnectionBasicTest >> testColumnNamesNoSuchTable [
 	| columns |
 	
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
@@ -385,7 +385,7 @@ SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testDataValuesAvailable [
+SQLite3ConnectionBasicTest >> testDataValuesAvailable [
 	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -402,7 +402,7 @@ SQLite3BaseConnectionTest >> testDataValuesAvailable [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testDateAndTime [
+SQLite3ConnectionBasicTest >> testDateAndTime [
 	| data s | 
 	
 	data := DateAndTime year: 2015 month: 4 day: 1.
@@ -430,7 +430,7 @@ SQLite3BaseConnectionTest >> testDateAndTime [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
+SQLite3ConnectionBasicTest >> testDeclaredColumnTypes [
 	| columns |
 	
 	res := db basicExecute: 'create table x (xk integer, xv blob, xb boolean);'.
@@ -445,7 +445,7 @@ SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testDefaultMultilingualStrings [
+SQLite3ConnectionBasicTest >> testDefaultMultilingualStrings [
 	| s idx | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xm1 text default ''中文'', xm2 text default ''áěšřčá'');'.
@@ -468,7 +468,7 @@ SQLite3BaseConnectionTest >> testDefaultMultilingualStrings [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testDoubleClose [
+SQLite3ConnectionBasicTest >> testDoubleClose [
 	
 	db close.
 	[ db close ] on: SQLite3Misuse do: [ ]
@@ -476,7 +476,7 @@ SQLite3BaseConnectionTest >> testDoubleClose [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testFloat [
+SQLite3ConnectionBasicTest >> testFloat [
 	| s |	
 	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
 	self assert: (res = 0).
@@ -492,7 +492,7 @@ SQLite3BaseConnectionTest >> testFloat [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testInteger [
+SQLite3ConnectionBasicTest >> testInteger [
 	"The large integer comes from Glorp's testInt8."
 	| s |	
 		
@@ -513,7 +513,7 @@ SQLite3BaseConnectionTest >> testInteger [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testMultilingualStrings [
+SQLite3ConnectionBasicTest >> testMultilingualStrings [
 	| data s idx | 
 	
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
@@ -541,7 +541,7 @@ SQLite3BaseConnectionTest >> testMultilingualStrings [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testMultilingualTableName [
+SQLite3ConnectionBasicTest >> testMultilingualTableName [
 	| s | 
 	
 	res := db basicExecute: 'create table 表一 (xk integer primary key, xm1 text default ''中文'');'.
@@ -563,7 +563,7 @@ SQLite3BaseConnectionTest >> testMultilingualTableName [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testObjectBlob [
+SQLite3ConnectionBasicTest >> testObjectBlob [
 	| data s | 
 	
 	data := OrderedCollection with: 1 with: 'two' with: 3.3.
@@ -592,7 +592,7 @@ SQLite3BaseConnectionTest >> testObjectBlob [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testPrepareStep [
+SQLite3ConnectionBasicTest >> testPrepareStep [
 	| s i sql | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -623,7 +623,7 @@ SQLite3BaseConnectionTest >> testPrepareStep [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testPrepareStepSelective [
+SQLite3ConnectionBasicTest >> testPrepareStepSelective [
 	| s i sql count | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -657,7 +657,7 @@ SQLite3BaseConnectionTest >> testPrepareStepSelective [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
+SQLite3ConnectionBasicTest >> testResultSetColumnIntrospection [
 	| s | 
 
 	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -679,7 +679,7 @@ SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testScaledDecimal [
+SQLite3ConnectionBasicTest >> testScaledDecimal [
 	"This test is a simplified version of GlorpNumericTest>>tesNumeric."
 	| s number float |
 	
@@ -703,7 +703,7 @@ SQLite3BaseConnectionTest >> testScaledDecimal [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testTableNames [
+SQLite3ConnectionBasicTest >> testTableNames [
 	| tables |
 	
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
@@ -716,7 +716,7 @@ SQLite3BaseConnectionTest >> testTableNames [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
+SQLite3ConnectionBasicTest >> testTableNamesOfEmptyDatabase [
 	| tables |
 	
 	tables := db tableNames.
@@ -726,7 +726,7 @@ SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testTime [
+SQLite3ConnectionBasicTest >> testTime [
 	"UDBCSQLite3 converts a given Time instance into a DateAndTime and stores that."
 	| data today s | 
 	
@@ -759,7 +759,7 @@ SQLite3BaseConnectionTest >> testTime [
 ]
 
 { #category : #tests }
-SQLite3BaseConnectionTest >> testTracing [
+SQLite3ConnectionBasicTest >> testTracing [
 	| sql callback expected actual  |
 	
 	(SystemVersion current major >= 7) ifTrue: [ self skip ].
