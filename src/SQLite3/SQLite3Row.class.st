@@ -16,33 +16,6 @@ SQLite3Row >> asArray [
 	^ self values asArray
 ]
 
-{ #category : #'as yet unclassified' }
-SQLite3Row >> at: aKey [
-	self
-		deprecated: 'Please use #atColumnNamed: instead'
-		transformWith: '`@receiver at: `@statements' 
-						-> '`@receiver atColumnNamed: `@statements'.
-	^ self atColumnNamed: aKey
-]
-
-{ #category : #'as yet unclassified' }
-SQLite3Row >> at: aKey ifAbsent: aBlock [
-	self
-		deprecated: 'Please use #atColumnNamed:ifAbsent: instead'
-		transformWith: '`@receiver at: `@statements1 ifAbsent: `@statements2' 
-						-> '`@receiver atColumnNamed: `@statements1 ifAbsent: `@statements2'.
-	^ self atColumnNamed: aKey ifAbsent: aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SQLite3Row >> at: aKey put: anObject [
-	self
-		deprecated: 'Please use #atColumnNamed:put instead'
-		transformWith: '`@receiver at: `@statements1 put: `@statements2' 
-						-> '`@receiver atColumnNamed: `@statements1 put: `@statements2'.
-	^ self atColumnNamed: aKey put: anObject
-]
-
 { #category : #accessing }
 SQLite3Row >> atColumnNamed: aKey [ 
 	^ self data at: aKey
@@ -63,24 +36,6 @@ SQLite3Row >> atIndex: anIndex [
 	^ self data values at: anIndex
 ]
 
-{ #category : #'as yet unclassified' }
-SQLite3Row >> atName: aKey [ 
-	self
-		deprecated: 'Please use #atColumnNamed: instead'
-		transformWith: '`@receiver atName: `@statements' 
-						-> '`@receiver atColumnNamed: `@statements'.
-	^ self atColumnNamed: aKey
-]
-
-{ #category : #'as yet unclassified' }
-SQLite3Row >> atName: aKey put: anObject [
-	self
-		deprecated: 'Please use #atColumnNamed:put instead'
-		transformWith: '`@receiver atName: `@statements1 put: `@statements2' 
-						-> '`@receiver atColumnNamed: `@statements1 put: `@statements2'.
-	^ self atColumnNamed: aKey put: anObject
-]
-
 { #category : #accessing }
 SQLite3Row >> columnNames [
 	^ self data keys
@@ -90,20 +45,6 @@ SQLite3Row >> columnNames [
 SQLite3Row >> data [
 
 	 ^data
-]
-
-{ #category : #'as yet unclassified' }
-SQLite3Row >> dataCount [
-	self
-		deprecated: 'Please use #size instead'
-		transformWith: '`@receiver dataCount' 
-						-> '`@receiver size'.
-	^ self size
-]
-
-{ #category : #'as yet unclassified' }
-SQLite3Row >> dataCount: anObject [
-	self error: 'Should not set size by hand.'
 ]
 
 { #category : #accessing }
