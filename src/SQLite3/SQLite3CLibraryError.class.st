@@ -60,5 +60,5 @@ SQLite3CLibraryError >> messageText [
 		stream nextPut: $(.
 		self errorCode printOn: stream.
 		stream nextPutAll: ') '.
-		stream nextPutAll: self apiErrorMessage ]
+		self apiErrorMessage printOn: stream  ]
 ]
