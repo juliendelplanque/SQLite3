@@ -7,6 +7,18 @@
 
 A clean SQLite FFI binding for Pharo for those who only want to use SQLite easily without any overlayer.
 
+- [Install](#install)
+- [Getting started](#getting-started)
+  * [Creating a connection](#creating-a-connection)
+  * [Opening a connection](#opening-a-connection)
+  * [Executing a simple query](#executing-a-simple-query)
+  * [Executing a parametrized query](#executing-a-parametrized-query)
+    + [Parameterize per index](#parameterize-per-index)
+    + [Parameterize per name](#parameterize-per-name)
+  * [Gather results from a query](#gather-results-from-a-query)
+  * [Closing a connection](#closing-a-connection)
+- [Acknowledgements](#acknowledgements)
+
 # Install
 
 ```st
@@ -16,8 +28,8 @@ Metacello new
 	load
 ```
 
-# Documentation
-This section explains how to use SQLite3 in Pharo.
+# Getting started
+This section explains how to get started with SQLite3 in Pharo.
 
 ## Creating a connection
 The first step is to create a connection to a SQLite3 database.
@@ -75,6 +87,12 @@ If the interrogation mark is followed by an integer, the parameter is taken at t
 
 ```st
 connection execute: 'INSERT INTO person(name,age) VALUES (?2, ?1);' value: 25 value: 'Cyril'.
+```
+
+This last query is equivalent to the following which is useful when the arguments array is big.
+
+```st
+connection execute: 'INSERT INTO person(name,age) VALUES (?2, ?1);' with: #(25 'Cyril').
 ```
 
 ### Parameterize per name
