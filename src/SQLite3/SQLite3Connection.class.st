@@ -33,9 +33,8 @@ SQLite3Connection class >> on: aFilename [
 { #category : #'instance creation' }
 SQLite3Connection class >> openOn: aFilename [
 
-	^(self new) 
-		on: aFilename; 
-		open; 
+	^(self on: aFilename) 
+		open;
 		yourself
 
 ]
