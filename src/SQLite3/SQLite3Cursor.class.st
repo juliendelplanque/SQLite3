@@ -75,23 +75,23 @@ SQLite3Cursor >> next [
 
 { #category : #API }
 SQLite3Cursor >> nextOfClass: aRowClass [
-	| numberOfColumns resultRow resultValue |
-	statement
-		ifNil: [ SQLite3Misuse
-				signal: 'This result set does not contain a prepared statement.' ].
+	| numberOfColumns resultRow |
+	statement ifNil: [
+		SQLite3GenericError signal: 'This cursor does not contain a prepared statement.' ].
 	moreRows
-		ifTrue: [ numberOfColumns := statement dataValuesAvailable.
-			numberOfColumns = 0
-				ifTrue: [ ^ nil ]
-				ifFalse: [ resultRow := aRowClass new.
-					0 to: numberOfColumns - 1 do: [ :columnIndex | 
-						resultValue := statement valueOfColumn: columnIndex.
-						resultRow
-							atColumnNamed: (statement nameOfColumn: columnIndex)
-							put: resultValue ].
-					moreRows := statement step isRow.
-					^ resultRow ] ].
-	^ nil
+		ifFalse: [ ^ nil ].
+	
+	numberOfColumns := statement dataValuesAvailable.
+	numberOfColumns = 0
+		ifTrue: [ ^ nil ].
+	
+	resultRow := aRowClass new.
+	0 to: numberOfColumns - 1 do: [ :columnIndex | 
+	resultRow
+		atColumnNamed: (statement nameOfColumn: columnIndex)
+		put: (statement valueOfColumn: columnIndex) ].
+	moreRows := statement step isRow.
+	^ resultRow
 ]
 
 { #category : #API }
