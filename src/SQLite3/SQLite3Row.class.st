@@ -67,6 +67,17 @@ SQLite3Row >> last [
 
 ]
 
+{ #category : #printing }
+SQLite3Row >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self columnNames do: [ :columnName |
+		aStream nextPutAll: columnName.
+		aStream nextPutAll: ' : '.
+		(self atColumnNamed: columnName) printOn: aStream ] separatedBy: [ aStream nextPutAll: ', ' ].
+	aStream nextPut: $).
+]
+
 { #category : #accessing }
 SQLite3Row >> size [
 	^ self data size

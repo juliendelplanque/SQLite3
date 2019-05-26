@@ -223,6 +223,14 @@ SQLite3Connection >> prepare: anSQLText [
 	
 ]
 
+{ #category : #printing }
+SQLite3Connection >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPut: $(.
+	dbFilename printOn: aStream.
+	aStream nextPut: $).
+]
+
 { #category : #'public API - cleaning' }
 SQLite3Connection >> reset: aStatement [ 
 	library reset: aStatement handle on: dbHandle
