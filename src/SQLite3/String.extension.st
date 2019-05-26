@@ -6,6 +6,12 @@ String >> sqlite3BeArgumentForExecutionOf: aSQLString by: aSQLite3Cursor [
 ]
 
 { #category : #'*SQLite3' }
+String >> sqlite3PathString [
+	"To be polymorphic with AbstractReference."
+	^ self
+]
+
+{ #category : #'*SQLite3' }
 String >> sqlite3PutYourselfAtIndex: index inStatement: aStatement [
 	^ aStatement at: index putString: self
 ]

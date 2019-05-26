@@ -6,11 +6,11 @@ Class {
 	#name : #SQLite3Connection,
 	#superclass : #Object,
 	#instVars : [
-		'dbFilename',
 		'dbHandle',
 		'isOpen',
 		'library',
-		'statementClass'
+		'statementClass',
+		'dbFile'
 	],
 	#category : #'SQLite3-Model'
 }
@@ -22,10 +22,10 @@ SQLite3Connection class >> memory [
 ]
 
 { #category : #'instance creation' }
-SQLite3Connection class >> on: aFilename [
+SQLite3Connection class >> on: anObject [
 
 	^(self new) 
-		on: aFilename;
+		dbFile: anObject;
 		yourself
 
 ]
@@ -97,6 +97,16 @@ SQLite3Connection >> columnNamesFor: aTableName [
 { #category : #'public API - transactional' }
 SQLite3Connection >> commitTransaction [
 	^ self basicExecute: 'commit'	
+]
+
+{ #category : #accessing }
+SQLite3Connection >> dbFile [
+	^ dbFile
+]
+
+{ #category : #accessing }
+SQLite3Connection >> dbFile: anObject [
+	dbFile := anObject
 ]
 
 { #category : #'public API - introspection' }
@@ -198,16 +208,9 @@ SQLite3Connection >> loadExtension: aFilename [
 	^ library loadExtension: dbHandle with: aFilename 
 ]
 
-{ #category : #private }
-SQLite3Connection >> on: aFilename [
-
-	dbFilename := aFilename.
-	^ self
-]
-
 { #category : #'public API - open/close' }
 SQLite3Connection >> open [
-	library open: dbFilename via: dbHandle.
+	library open: dbFile sqlite3PathString via: dbHandle.
 	isOpen := true
 ]
 
@@ -226,7 +229,7 @@ SQLite3Connection >> prepare: anSQLText [
 SQLite3Connection >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
-	dbFilename printOn: aStream.
+	dbFile printOn: aStream.
 	aStream nextPut: $).
 ]
 
