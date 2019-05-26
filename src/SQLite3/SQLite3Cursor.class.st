@@ -29,19 +29,10 @@ SQLite3Cursor >> execute: aSQLString with: anObject on: aDb [
 
 { #category : #private }
 SQLite3Cursor >> execute: anSQLText withCollection: aCollection [
-	| i |
 	self prepareStatement: anSQLText.
-	i := 1.
-	aCollection do: [ :v | i := self execute: statement withIndex: i withValue: v ].
+	aCollection doWithIndex: [ :object :i | 
+		object sqlite3PutYourselfAtIndex: i inStatement: statement ].
 	moreRows := statement step isRow
-]
-
-{ #category : #private }
-SQLite3Cursor >> execute: aStatement withIndex: anInteger withValue: anObject [
-	anObject sqlite3PutYourselfAtIndex: anInteger inStatement: aStatement.
-	^ anInteger + 1
-		
-
 ]
 
 { #category : #private }
