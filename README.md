@@ -7,6 +7,18 @@
 
 A clean SQLite FFI binding for Pharo for those who only want to use SQLite easily without any overlayer.
 
+- [Install](#install)
+- [Getting started](#getting-started)
+  * [Creating a connection](#creating-a-connection)
+  * [Opening a connection](#opening-a-connection)
+  * [Executing a simple query](#executing-a-simple-query)
+  * [Executing a parametrized query](#executing-a-parametrized-query)
+    + [Parameterize per index](#parameterize-per-index)
+    + [Parameterize per name](#parameterize-per-name)
+  * [Gather results from a query](#gather-results-from-a-query)
+  * [Closing a connection](#closing-a-connection)
+- [Acknowledgements](#acknowledgements)
+
 # Install
 
 ```st
@@ -16,8 +28,8 @@ Metacello new
 	load
 ```
 
-# Documentation
-This section explains how to use SQLite3 in Pharo.
+# Getting started
+This section explains how to get started with SQLite3 in Pharo.
 
 ## Creating a connection
 The first step is to create a connection to a SQLite3 database.
@@ -77,6 +89,12 @@ If the interrogation mark is followed by an integer, the parameter is taken at t
 connection execute: 'INSERT INTO person(name,age) VALUES (?2, ?1);' value: 25 value: 'Cyril'.
 ```
 
+This last query is equivalent to the following which is useful when the arguments array is big.
+
+```st
+connection execute: 'INSERT INTO person(name,age) VALUES (?2, ?1);' with: #(25 'Cyril').
+```
+
 ### Parameterize per name
 Parameters can be referenced through a name, either prefixed by `:` or `@` character.
 The two following examples are equivalent:
@@ -93,6 +111,38 @@ connection execute: 'INSERT INTO person(name,age) VALUES (@name, @age);' with: {
 	'@age' -> 30 } asDictionary.
 ```
 
+## Gather results from a query
+All calls to execute return a `SQLite3Cursor` object.
+This object allows one to retrieve the results of the query.
+
+```st
+cursor := connection execute: 'SELECT * FROM person;'.
+```
+
+One can ask a cursor if it has more results to provide.
+
+```st
+cursor hasNext. "true"
+```
+
+If the answer is true, the next row of results can be retrieved.
+
+```st
+cursor next. "a SQLite3Row(id : 1, name : 'Cyril', age : 25)"
+```
+
+It is also possible to ask for all remaining rows of the cursor as an array.
+
+```st
+cursor rows. "an Array(a SQLite3Row(id : 2, name : 'Julien', age : 24) a SQLite3Row(id : 3, name : 'Guillaume', age : 30) )"
+```
+
+Thus, the cursor has no more row to provide.
+
+```st
+cursor hasNext. "false"
+```
+
 ## Closing a connection
 Either memory and file databases need to be closed when no longer needed.
 This can be achieve using `#close` message.
@@ -102,6 +152,6 @@ connection close.
 ```
 
 # Acknowledgements
-This project is a fork of the 'UDBC-SQLite-Base' package of [Pharo-UDBC](https://github.com/astares/Pharo-UDBC) project which itself seems to have forked part of the code of [Garage](https://github.com/pharo-rdbms/garage).
+This project is a fork of the 'UDBC-SQLite-Base' package of [Pharo-UDBC](https://github.com/astares/Pharo-UDBC).
 
 Wherever this code comes from originally, thanks to all the contributors who enhanced this project over time.
