@@ -109,6 +109,11 @@ SQLite3PreparedStatement >> dateTimeAt: aColumn [
 	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
+{ #category : #operating }
+SQLite3PreparedStatement >> executeWith: anObject [
+	^ self connection execute: self sqlText with: anObject
+]
+
 { #category : #initialization }
 SQLite3PreparedStatement >> finalize [
 	| result |
@@ -188,6 +193,12 @@ SQLite3PreparedStatement >> stringAt: aColumn [
 { #category : #public }
 SQLite3PreparedStatement >> typeOfColumn: aColumn [
 	^ self library typeFor: handle at: aColumn
+]
+
+{ #category : #operating }
+SQLite3PreparedStatement >> value: anObject [
+	"To be polymorphic with Block and Symbol."
+	^ self executeWith: anObject
 ]
 
 { #category : #public }
