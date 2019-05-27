@@ -180,7 +180,7 @@ SQLite3PreparedStatement >> step [
 	^ connection step: handle
 ]
 
-{ #category : #operating }
+{ #category : #'public - accessing' }
 SQLite3PreparedStatement >> stringAt: aColumn [	 
 	^ self library stringFrom: handle at: aColumn
 ]
