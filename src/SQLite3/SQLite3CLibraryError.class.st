@@ -28,7 +28,7 @@ SQLite3CLibraryError class >> errorCode [
 
 { #category : #'instance creation' }
 SQLite3CLibraryError class >> forErrorCode: anInteger apiErrorMessage: aString [
-	^ (self subclassForErrorCode: anInteger)
+	^ (self subclassForErrorCode: anInteger) new
 			apiErrorMessage: aString;
 			yourself
 ]
