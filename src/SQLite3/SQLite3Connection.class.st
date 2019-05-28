@@ -203,6 +203,11 @@ SQLite3Connection >> isOpen [
 	^ isOpen
 ]
 
+{ #category : #'public API - introspection' }
+SQLite3Connection >> lastInsertedId [
+	^ library apiLastInsertRowId: dbHandle
+]
+
 { #category : #'public API - extensions' }
 SQLite3Connection >> loadExtension: aFilename [
 	^ library loadExtension: dbHandle with: aFilename 

@@ -259,6 +259,14 @@ SQLite3Library >> apiFinalize: aHandle [
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiLastInsertRowId: handle [
+	"int sqlite3_last_insert_rowid(sqlite3* handle)"
+	 
+	^self ffiCall: #(int sqlite3_last_insert_rowid(sqlite3* handle))
+	 
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiLoadExtension: dbHandle with: zFile with: zProc with: pzErrMsg [
 	"int sqlite3_load_extension(sqlite3*, const char*, const char*, char **)."
 
