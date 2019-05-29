@@ -141,6 +141,18 @@ SQLite3Connection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle 
 ]
 
+{ #category : #'public API - open/close' }
+SQLite3Connection >> ensureClosed [
+	self isClosed
+		ifFalse: [ self close ]
+]
+
+{ #category : #'public API - open/close' }
+SQLite3Connection >> ensureOpen [
+	self isOpen
+		ifFalse: [ self open ]
+]
+
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText [	
 	^ self execute: anSQLText with: #()
@@ -196,6 +208,11 @@ SQLite3Connection >> initialize [
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
 	statementClass := SQLite3PreparedStatement
+]
+
+{ #category : #testing }
+SQLite3Connection >> isClosed [
+	^ self isOpen not
 ]
 
 { #category : #testing }
