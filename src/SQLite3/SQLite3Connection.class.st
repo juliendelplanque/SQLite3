@@ -140,9 +140,12 @@ SQLite3Connection >> disableExtensions [
 SQLite3Connection >> do: aBlock [
 	"Evaluate a block with myself as argument while ensuring the connection is opened
 	 before the block is executed and is closed after the block has been executed or
-	 if an exception is signalled."
+	 if an exception is signalled.
+	 Returns the result of the block evaluation."
+	|result|
 	self ensureOpen.
-	[ aBlock value: self ] ensure: [ self ensureClosed ]
+	[ result := aBlock value: self ] ensure: [ self ensureClosed ].
+	^ result
 ]
 
 { #category : #'public API - extensions' }
