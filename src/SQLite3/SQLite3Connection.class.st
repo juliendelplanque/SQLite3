@@ -136,6 +136,14 @@ SQLite3Connection >> disableExtensions [
 	^ library disableLoadExtension: dbHandle 
 ]
 
+{ #category : #'public API - open/close' }
+SQLite3Connection >> do: aBlock [
+	"Execute a block while ensuring the connection is opened before the block is executed
+	 and is closed after the block has been executed or if an exception is signalled."
+	self ensureOpen.
+	aBlock ensure: [ self ensureClosed ]
+]
+
 { #category : #'public API - extensions' }
 SQLite3Connection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle 
