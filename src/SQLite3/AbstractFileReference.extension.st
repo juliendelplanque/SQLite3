@@ -7,6 +7,12 @@ AbstractFileReference >> sqlite3ConnectionDo: aBlock [
 ]
 
 { #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString) rows ]
+]
+
+{ #category : #'*SQLite3' }
 AbstractFileReference >> sqlite3PathString [
 	^ self pathString
 ]
