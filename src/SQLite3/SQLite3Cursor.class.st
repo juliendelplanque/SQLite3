@@ -21,6 +21,12 @@ SQLite3Cursor class >> on: aSQLite3Connection [
 		yourself
 ]
 
+{ #category : #testing }
+SQLite3Cursor >> atEnd [
+	"Returns true if no more row can be read from the cursor."
+	^ self hasNext not
+]
+
 { #category : #API }
 SQLite3Cursor >> close [
 
@@ -36,6 +42,14 @@ SQLite3Cursor >> connection [
 { #category : #accessing }
 SQLite3Cursor >> connection: anObject [
 	connection := anObject
+]
+
+{ #category : #API }
+SQLite3Cursor >> do: aBlock [
+	"Apply a block on each row returned by the cursor."
+	[ self hasNext ]
+		whileTrue: [ 
+			aBlock value: self next ]
 ]
 
 { #category : #private }
