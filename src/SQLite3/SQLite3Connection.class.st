@@ -296,16 +296,15 @@ SQLite3Connection >> step: preparedStatementHandle [
 { #category : #'public API - introspection' }
 SQLite3Connection >> tableNames [
 	| tables s |
-	
 	self isOpen
-		ifFalse: [ SQLite3NotOpen signal ]
-		ifTrue: [ 
-			tables := OrderedCollection new.
-			s := self prepare: 'select tbl_name from sqlite_master where type = "table"'.
-	  		s basicExecute: [ :row |
-				(row dataValuesAvailable > 0) ifTrue: [ tables add: (row stringAt: 0) ]].
-	  		s finalize.
-			^ tables ]
+		ifFalse: [ SQLite3NotOpen signal ].
+	
+	tables := OrderedCollection new.
+	s := self prepare: 'SELECT tbl_name FROM sqlite_master WHERE type = "table";'.
+	s basicExecute: [ :row |
+		(row dataValuesAvailable > 0) ifTrue: [ tables add: (row stringAt: 0) ]].
+	s finalize.
+	^ tables
 ]
 
 { #category : #'public API - introspection' }
