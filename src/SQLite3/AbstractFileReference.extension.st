@@ -13,6 +13,30 @@ AbstractFileReference >> sqlite3ConnectionExecute: aString [
 ]
 
 { #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString value: object1 [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString value: object1) rows ]
+]
+
+{ #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString value: object1 value: object2 [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString value: object1 value: object2) rows ]
+]
+
+{ #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString value: object1 value: object2 value: object3 [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString value: object1 value: object2 value: object3) rows ]
+]
+
+{ #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString value: object1 value: object2 value: object3 value: object4 [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString value: object1 value: object2 value: object3 value: object4) rows ]
+]
+
+{ #category : #'*SQLite3' }
 AbstractFileReference >> sqlite3PathString [
 	^ self pathString
 ]
