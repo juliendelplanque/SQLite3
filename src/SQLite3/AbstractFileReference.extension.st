@@ -13,6 +13,12 @@ AbstractFileReference >> sqlite3ConnectionExecute: aString [
 ]
 
 { #category : #'*SQLite3' }
+AbstractFileReference >> sqlite3ConnectionExecute: aString gatherRowsAs: classForRow [
+	^ self sqlite3ConnectionDo: [ :connection |
+		(connection execute: aString) rowsOfClass: classForRow ]
+]
+
+{ #category : #'*SQLite3' }
 AbstractFileReference >> sqlite3ConnectionExecute: aString value: object1 [
 	^ self sqlite3ConnectionDo: [ :connection |
 		(connection execute: aString value: object1) rows ]
