@@ -144,7 +144,7 @@ SQLite3Connection >> do: aBlock [
 	 Returns the result of the block evaluation."
 	|result|
 	self ensureOpen.
-	[ result := aBlock value: self ] ensure: [ self ensureClosed ].
+	result := [ aBlock cull: self ] ensure: [ self ensureClosed ].
 	^ result
 ]
 
