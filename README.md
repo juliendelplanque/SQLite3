@@ -1,3 +1,8 @@
+**The official, community-maintained driver for SQLite3 should be favored to this one. Please use it, it is located there:** 
+
+[https://github.com/pharo-rdbms/Pharo-SQLite3](https://github.com/pharo-rdbms/Pharo-SQLite3).
+
+
 # SQLite3
 [![Build Status](https://travis-ci.org/juliendelplanque/SQLite3.svg?branch=master)](https://travis-ci.org/juliendelplanque/SQLite3)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
